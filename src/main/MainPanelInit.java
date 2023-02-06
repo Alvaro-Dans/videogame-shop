@@ -2,17 +2,17 @@ package main;
 
 import java.awt.EventQueue;
 
-import views.Marco_Principal;
+import views.MainView;
 
-public class IniciarPanel {
+public class MainPanelInit {
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
-				Marco_Principal appPrincipal = new Marco_Principal();
-				appPrincipal.hacerVisible();
+				MainView mainView = new MainView();
+				mainView.hacerVisible();
 			}
 		});
 

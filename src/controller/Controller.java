@@ -62,6 +62,22 @@ public class Controller implements ActionListener {
 			mainPanel.removePanel(stockView);
 		}
 
+		if (e.getSource().equals(stockView.getBtnMarketPanel())) {
+			stockView.getBtnMarketPanel().setEnabled(false);
+			stockView.getBtnStockPanel().setEnabled(true);
+			stockView.loadMarketData();
+			stockView.getScrpStockTable().setVisible(false);
+			stockView.getScrpMarketTable().setVisible(true);
+		}
+
+		if (e.getSource().equals(stockView.getBtnStockPanel())) {
+			stockView.getBtnMarketPanel().setEnabled(true);
+			stockView.getBtnStockPanel().setEnabled(false);
+			stockView.loadStockData();
+			stockView.getScrpStockTable().setVisible(true);
+			stockView.getScrpMarketTable().setVisible(false);
+		}
+
 	}
 
 	private void userControl(ActionEvent e) {
@@ -81,6 +97,7 @@ public class Controller implements ActionListener {
 		if (e.getSource().equals(homeView.getBtnStockView())) {
 			mainPanel.loadPanel(stockView);
 			mainPanel.removePanel(homeView);
+			stockView.loadStockData();
 		}
 
 		if (e.getSource().equals(homeView.getBtnFinanceView())) {

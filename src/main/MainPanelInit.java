@@ -2,7 +2,13 @@ package main;
 
 import java.awt.EventQueue;
 
-import views.MainView;
+import controller.Controller;
+import views.FinanceView;
+import views.HomeView;
+import views.MainPanel;
+import views.RankingView;
+import views.StockView;
+import views.UsersView;
 
 public class MainPanelInit {
 
@@ -11,8 +17,27 @@ public class MainPanelInit {
 
 			@Override
 			public void run() {
-				MainView mainView = new MainView();
-				mainView.hacerVisible();
+
+				HomeView homeView = new HomeView();
+				UsersView usersView = new UsersView();
+				StockView stockView = new StockView();
+				FinanceView financeView = new FinanceView();
+				RankingView rankingView = new RankingView();
+
+				MainPanel mainPanel = new MainPanel(homeView, usersView, stockView, financeView, rankingView);
+
+				Controller controller = new Controller(homeView, usersView, stockView, financeView, rankingView);
+
+				homeView.setController(controller);
+				usersView.setController(controller);
+				stockView.setController(controller);
+				financeView.setController(controller);
+				rankingView.setController(controller);
+
+				mainPanel.add(homeView);
+				mainPanel.loadPanel(homeView);
+				mainPanel.setVisible(true);
+
 			}
 		});
 

@@ -25,6 +25,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class UsersView extends JPanel {
 
@@ -37,13 +39,19 @@ public class UsersView extends JPanel {
 	private JPanel userPanel;// SI
 	private JPanel informationPanel;// SI
 	private JPanel controlPanel;// SI
+	private JPanel addUserPanel;
 	private JButton btnAgregar;
 	private JButton btnEditar;
 	private JButton btnEliminar;
 	private JScrollPane scrpUserTable;
 	private JTable userTable;// SI
-	private JTextField textField;
-	private JLabel NM;
+	private JTextField textFieldName;
+	private JLabel LabelName;
+	private JTextField textFieldAge;
+	private JTextField textFieldGender;
+	private JTextField textFieldPoints;
+	private JButton btnOk;
+	private JButton btnCancel;
 	// --------------
 
 	public UsersView() {
@@ -72,88 +80,120 @@ public class UsersView extends JPanel {
 		userPanel.setBounds(10, 81, 980, 580);
 		add(userPanel);
 
-		// btnStockPanel = new JButton("Stock");
-		// btnStockPanel.setEnabled(false);
-		// btnStockPanel.setFocusPainted(false);
-		// btnStockPanel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		// menuPanel.add(btnStockPanel);
-
-		/*
-		 * btnMarketPanel = new JButton("Market");
-		 * btnMarketPanel.setFocusPainted(false); btnMarketPanel.setFont(new
-		 * Font("Tahoma", Font.PLAIN, 16)); menuPanel.add(btnMarketPanel);
-		 */
+		
 		userPanel.setLayout(null);
-
-		JPanel addUserPanel = new JPanel();
-		addUserPanel.setBounds(0, 0, 980, 532);
-		userPanel.add(addUserPanel);
-		addUserPanel.setLayout(null);
-
-		NM = new JLabel("Nombre:");
-		NM.setBounds(216, 74, 46, 14);
-		addUserPanel.add(NM);
-
-		textField = new JTextField();
-		textField.setBounds(272, 71, 86, 20);
-		addUserPanel.add(textField);
-		textField.setColumns(10);
-
+						
 		informationPanel = new JPanel();
-		informationPanel.setBounds(0, 0, 980, 532);
+		informationPanel.setBounds(0, 0, 980, 492);
 		userPanel.add(informationPanel);
 		informationPanel.setLayout(null);
-
+								
 		scrpUserTable = new JScrollPane();
-		scrpUserTable.setBounds(0, 0, 980, 491);
+		scrpUserTable.setBounds(0, 0, 980, 533);
 		informationPanel.add(scrpUserTable);
-
+										
 		userTable = new JTable();
 		userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		userTable.setBounds(0, 0, 1, 1);
 		scrpUserTable.setViewportView(userTable);
-
-		/*
-		 * stockTable = new JTable(); stockTable.setBounds(0, 0, 1, 1);
-		 * scrpStockTable.setViewportView(stockTable); scrpStockTable.setVisible(true);
-		 */
-		configurarTablas();
-
+				
 		controlPanel = new JPanel();
 		controlPanel.setBounds(0, 532, 980, 48);
 		FlowLayout fl_controlPanel = (FlowLayout) controlPanel.getLayout();
 		fl_controlPanel.setVgap(10);
 		fl_controlPanel.setHgap(100);
 		userPanel.add(controlPanel);
-
+						
 		btnAgregar = new JButton("AGREGAR");
 		btnAgregar.setFocusPainted(false);
 		btnAgregar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnAgregar);
-
+								
 		btnEditar = new JButton("EDITAR");
 		btnEditar.setFocusPainted(false);
 		btnEditar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnEditar);
-
+										
 		btnEliminar = new JButton("ELIMINAR");
 		btnEliminar.setFocusPainted(false);
 		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnEliminar);
+		
+				JPanel addUserPanel = new JPanel();
+				addUserPanel.setBounds(0, 0, 980, 492);
+				userPanel.add(addUserPanel);
+				addUserPanel.setLayout(null);
+					
+
+					LabelName = new JLabel("Nombre:");
+					LabelName.setBounds(313, 74, 46, 14);
+					addUserPanel.add(LabelName);
+					
+							textFieldName = new JTextField();
+							textFieldName.setBounds(369, 72, 216, 20);
+							addUserPanel.add(textFieldName);
+							textFieldName.setColumns(10);
+							
+							
+							JLabel LabelAge = new JLabel("Edad:");
+							LabelAge.setBounds(313, 126, 46, 14);
+							addUserPanel.add(LabelAge);
+							
+							textFieldAge = new JTextField();
+							textFieldAge.setColumns(10);
+							textFieldAge.setBounds(369, 124, 216, 20);
+							addUserPanel.add(textFieldAge);
+							
+							JLabel LabelGender = new JLabel("Sexo:");
+							LabelGender.setBounds(313, 180, 46, 14);
+							addUserPanel.add(LabelGender);
+							
+							textFieldGender = new JTextField();
+							textFieldGender.setColumns(10);
+							textFieldGender.setBounds(369, 178, 216, 20);
+							addUserPanel.add(textFieldGender);
+							
+							JLabel LabelPoints = new JLabel("Puntos:");
+							LabelPoints.setBounds(313, 234, 46, 14);
+							addUserPanel.add(LabelPoints);
+							
+							
+							textFieldPoints = new JTextField();
+							textFieldPoints.setColumns(10);
+							textFieldPoints.setBounds(369, 232, 216, 20);
+							addUserPanel.add(textFieldPoints);
+							//textFieldPoints.setVisible(false);
+							
+							btnOk = new JButton("Ok");
+							btnOk.setBounds(313, 321, 85, 21);
+							addUserPanel.add(btnOk);
+							
+							btnCancel = new JButton("Cancel");
+							btnCancel.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent arg0) {
+								}
+							});
+							btnCancel.setBounds(500, 321, 85, 21);
+							addUserPanel.add(btnCancel);
+
+		
+		configurarTablas();
 
 	}
 
-	// ------------------------------------BOTON
-	// HOME-------------------------------------------
 
 	public void setControllerUser(Controller controller) {
 		btnHome.addActionListener(controller);
 		btnAgregar.addActionListener(controller);
-		// btnUserPanel.addActionListener(controller);
 		btnEditar.addActionListener(controller);
 		btnEliminar.addActionListener(controller);
-		textField.addActionListener(controller);
-		// btnStockPanel.addActionListener(controller);
+		textFieldName.addActionListener(controller);
+		btnOk.addActionListener(controller);
+		btnCancel.addActionListener(controller);
+		textFieldName.addActionListener(controller);
+		textFieldAge.addActionListener(controller);
+		textFieldGender.addActionListener(controller);
+		textFieldPoints.addActionListener(controller);
 	}
 
 	public void loadUserData() {
@@ -309,11 +349,82 @@ public class UsersView extends JPanel {
 	}
 
 	public JTextField getTextField() {
-		return textField;
+		return textFieldName;
 	}
 
 	public void setTextField(JTextField textField) {
-		this.textField = textField;
+		this.textFieldName = textField;
 	}
 
+	public JPanel getUserPanel() {
+		return userPanel;
+	}
+
+	public void setUserPanel(JPanel userPanel) {
+		this.userPanel = userPanel;
+	}
+
+	public JPanel getAddUserPanel() {
+		return addUserPanel;
+	}
+
+	public void setAddUserPanel(JPanel addUserPanel) {
+		this.addUserPanel = addUserPanel;
+	}
+
+	public JTextField getTextFieldName() {
+		return textFieldName;
+	}
+
+	public void setTextFieldName(JTextField textFieldName) {
+		this.textFieldName = textFieldName;
+	}
+
+	public JTextField getTextFieldAge() {
+		return textFieldAge;
+	}
+
+	public void setTextFieldAge(JTextField textFieldAge) {
+		this.textFieldAge = textFieldAge;
+	}
+
+	public JTextField getTextFieldGender() {
+		return textFieldGender;
+	}
+
+	public void setTextFieldGender(JTextField textFieldGender) {
+		this.textFieldGender = textFieldGender;
+	}
+
+	public JTextField getTextFieldPoints() {
+		return textFieldPoints;
+	}
+
+	public void setTextFieldPoints(JTextField textFieldPoints) {
+		this.textFieldPoints = textFieldPoints;
+	}
+
+
+	public JButton getBtnCancel() {
+		return btnCancel;
+	}
+
+
+	public void setBtnCancel(JButton btnCancel) {
+		this.btnCancel = btnCancel;
+	}
+
+
+	public JButton getBtnOk() {
+		return btnOk;
+	}
+
+
+	public void setBtnOk(JButton btnOk) {
+		this.btnOk = btnOk;
+	}
+
+	
+	
+	
 }

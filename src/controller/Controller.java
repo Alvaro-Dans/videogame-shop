@@ -19,6 +19,7 @@ public class Controller implements ActionListener {
 	private RankingView rankingView;
 	private MainPanel mainPanel = new MainPanel();
 
+
 	public Controller(HomeView homeView, UsersView usersView, StockView stockView, FinanceView financeView,
 			RankingView rankingView) {
 		this.homeView = homeView;
@@ -84,7 +85,25 @@ public class Controller implements ActionListener {
 		if (e.getSource().equals(usersView.getBtnHome())) {
 			mainPanel.loadPanel(homeView);
 			mainPanel.removePanel(usersView);
+			
 		}
+		
+		if (e.getSource().equals(usersView.getBtnAgregar())) {
+			
+			usersView.getInformationPanel().setVisible(false);
+			usersView.getAddUserPanel().setVisible(true);
+			
+		}
+		
+		if (e.getSource().equals(usersView.getBtnCancel())) {
+			
+			usersView.getInformationPanel().setVisible(true);
+			usersView.getAddUserPanel().setVisible(false);
+			usersView.getBtnOk().setEnabled(false);
+			
+		}
+		
+		
 
 		// devuelve fila seleccionada
 		usersView.getUserTable().getSelectedRow();

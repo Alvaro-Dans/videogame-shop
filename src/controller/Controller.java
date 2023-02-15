@@ -86,12 +86,16 @@ public class Controller implements ActionListener {
 			mainPanel.removePanel(usersView);
 		}
 
+		// devuelve fila seleccionada
+		usersView.getUserTable().getSelectedRow();
+
 	}
 
 	private void homeControl(ActionEvent e) {
 		if (e.getSource().equals(homeView.getBtnUsersView())) {
 			mainPanel.loadPanel(usersView);
 			mainPanel.removePanel(homeView);
+			usersView.loadUserData();
 		}
 
 		if (e.getSource().equals(homeView.getBtnStockView())) {

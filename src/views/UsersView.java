@@ -1,26 +1,30 @@
 package views;
 
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
-import javax.swing.ListSelectionModel;
 
 public class UsersView extends JPanel {
 
@@ -28,23 +32,19 @@ public class UsersView extends JPanel {
 
 	private JButton btnHome;
 	private DefaultTableModel tblUserModel;
-	
-	//-----------
-	private JPanel userPanel;//SI
-	private JPanel menuPanel;//SI
-	private JButton btnStockPanel;//NO
-	private JButton btnMarketPanel;//NO
-	private JPanel informationPanel;//SI
-	private JPanel controlPanel;//SI
+
+	// -----------
+	private JPanel userPanel;// SI
+	private JPanel informationPanel;// SI
+	private JPanel controlPanel;// SI
 	private JButton btnAgregar;
 	private JButton btnEditar;
 	private JButton btnEliminar;
-	private JTable stockTable;//NO
-	private JScrollPane scrpUserTable;//NO
-	private JScrollPane scrpUserTable_1;
-	private JScrollPane scrpMarketTable;//SI
-	private JTable userTable;//SI
-	//--------------
+	private JScrollPane scrpUserTable;
+	private JTable userTable;// SI
+	private JTextField textField;
+	private JLabel NM;
+	// --------------
 
 	public UsersView() {
 		setSize(1000, 700);
@@ -67,67 +67,65 @@ public class UsersView extends JPanel {
 			}
 		});
 		add(btnHome);
-		
-		
+
 		userPanel = new JPanel();
 		userPanel.setBounds(10, 81, 980, 580);
 		add(userPanel);
-		userPanel.setLayout(new BorderLayout(0, 0));
-		
-		menuPanel = new JPanel();
-		FlowLayout fl_menuPanel = (FlowLayout) menuPanel.getLayout();
-		fl_menuPanel.setVgap(15);
-		fl_menuPanel.setHgap(100);
-		userPanel.add(menuPanel, BorderLayout.NORTH);
-		
-		//btnStockPanel = new JButton("Stock");
-		//btnStockPanel.setEnabled(false);
-		//btnStockPanel.setFocusPainted(false);
-		//btnStockPanel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		//menuPanel.add(btnStockPanel);
-		
-		/*
-		btnMarketPanel = new JButton("Market");
-		btnMarketPanel.setFocusPainted(false);
-		btnMarketPanel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		menuPanel.add(btnMarketPanel);
-		*/
-		
-		informationPanel = new JPanel();
-		userPanel.add(informationPanel, BorderLayout.CENTER);
-		informationPanel.setLayout(null);
-		
-		/*
-		stockTable = new JTable();
-		stockTable.setBounds(0, 0, 1, 1);
-		scrpStockTable.setViewportView(stockTable);
-		scrpStockTable.setVisible(true);
-		*/
-		
-		
-		scrpUserTable = new JScrollPane();
-		scrpUserTable.setBounds(0, 0, 980, 463);
-		scrpUserTable.setVisible(true);
-		
-		scrpUserTable_1 = new JScrollPane();
-		scrpUserTable_1.setBounds(0, 0, 980, 463);
-		informationPanel.add(scrpUserTable_1);
 
-		
+		// btnStockPanel = new JButton("Stock");
+		// btnStockPanel.setEnabled(false);
+		// btnStockPanel.setFocusPainted(false);
+		// btnStockPanel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		// menuPanel.add(btnStockPanel);
+
+		/*
+		 * btnMarketPanel = new JButton("Market");
+		 * btnMarketPanel.setFocusPainted(false); btnMarketPanel.setFont(new
+		 * Font("Tahoma", Font.PLAIN, 16)); menuPanel.add(btnMarketPanel);
+		 */
+		userPanel.setLayout(null);
+
+		JPanel addUserPanel = new JPanel();
+		addUserPanel.setBounds(0, 0, 980, 532);
+		userPanel.add(addUserPanel);
+		addUserPanel.setLayout(null);
+
+		NM = new JLabel("Nombre:");
+		NM.setBounds(216, 74, 46, 14);
+		addUserPanel.add(NM);
+
+		textField = new JTextField();
+		textField.setBounds(272, 71, 86, 20);
+		addUserPanel.add(textField);
+		textField.setColumns(10);
+
+		informationPanel = new JPanel();
+		informationPanel.setBounds(0, 0, 980, 532);
+		userPanel.add(informationPanel);
+		informationPanel.setLayout(null);
+
+		scrpUserTable = new JScrollPane();
+		scrpUserTable.setBounds(0, 0, 980, 491);
+		informationPanel.add(scrpUserTable);
+
 		userTable = new JTable();
 		userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		userTable.setColumnSelectionAllowed(true);
-		userTable.setCellSelectionEnabled(true);
-		configurarTablas();
 		userTable.setBounds(0, 0, 1, 1);
-		scrpUserTable_1.setViewportView(userTable);
-		
+		scrpUserTable.setViewportView(userTable);
+
+		/*
+		 * stockTable = new JTable(); stockTable.setBounds(0, 0, 1, 1);
+		 * scrpStockTable.setViewportView(stockTable); scrpStockTable.setVisible(true);
+		 */
+		configurarTablas();
+
 		controlPanel = new JPanel();
+		controlPanel.setBounds(0, 532, 980, 48);
 		FlowLayout fl_controlPanel = (FlowLayout) controlPanel.getLayout();
 		fl_controlPanel.setVgap(10);
 		fl_controlPanel.setHgap(100);
-		userPanel.add(controlPanel, BorderLayout.SOUTH);
-		
+		userPanel.add(controlPanel);
+
 		btnAgregar = new JButton("AGREGAR");
 		btnAgregar.setFocusPainted(false);
 		btnAgregar.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -142,25 +140,22 @@ public class UsersView extends JPanel {
 		btnEliminar.setFocusPainted(false);
 		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnEliminar);
-		
-		
-		
-		
+
 	}
-	
-	//------------------------------------BOTON HOME-------------------------------------------	
-	
+
+	// ------------------------------------BOTON
+	// HOME-------------------------------------------
+
 	public void setControllerUser(Controller controller) {
 		btnHome.addActionListener(controller);
 		btnAgregar.addActionListener(controller);
-		//btnUserPanel.addActionListener(controller);
+		// btnUserPanel.addActionListener(controller);
 		btnEditar.addActionListener(controller);
 		btnEliminar.addActionListener(controller);
-		//btnStockPanel.addActionListener(controller);
+		textField.addActionListener(controller);
+		// btnStockPanel.addActionListener(controller);
 	}
-	
-	
-	
+
 	public void loadUserData() {
 		tblUserModel.getDataVector().clear();
 		File file = new File("src/model/data/UserStorage.txt");
@@ -182,10 +177,55 @@ public class UsersView extends JPanel {
 
 		sc.close();
 	}
-	
-	
-	//-configurar tablas
-	
+
+	public void addUserData(String name, Double edad, String sexo, Double puntos) {
+		tblUserModel.getDataVector().clear();
+		File file = new File("src/model/data/UserStorage.txt");
+		Scanner sc = null;
+		String txtInfo = "";
+		try {
+			sc = new Scanner(file);
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
+				txtInfo += line + "\n";
+			}
+			txtInfo += name + "," + String.valueOf(edad) + "," + sexo + "," + String.valueOf(puntos);
+			out.write(txtInfo);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void editUserData(String name, Double edad, String sexo, Double puntos, int row) {
+		File file = new File("src/model/data/UserStorage.txt");
+		List<String> usersList = new ArrayList<>();
+		Scanner sc = null;
+		String txtInfo = "";
+		try {
+			sc = new Scanner(file);
+			while (sc.hasNextLine()) {
+				usersList.add(sc.nextLine());
+			}
+			usersList.set(row, name + "," + String.valueOf(edad) + "," + sexo + "," + String.valueOf(puntos));
+
+			for (String line : usersList) {
+				txtInfo += line + "\n";
+			}
+
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			out.write(txtInfo);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// -configurar tablas
+
 	private void configurarTablas() {
 
 		tblUserModel = new DefaultTableModel() {
@@ -210,23 +250,7 @@ public class UsersView extends JPanel {
 		userTable.getColumn("SEXO").setCellRenderer(cellRendUser);
 		userTable.getColumn("PUNTOS").setCellRenderer(cellRendUser);
 
-		
 	}
-	
-	//-------------------
-
-	public void setController(Controller controller) {
-		btnHome.addActionListener(controller);
-	}
-	
-	public JButton getBtnStockPanel() {
-		return btnStockPanel;
-	}
-
-	public void setBtnStockPanel(JButton btnStockPanel) {
-		this.btnStockPanel = btnStockPanel;
-	}
-	
 
 	public JButton getBtnHome() {
 		return btnHome;
@@ -235,21 +259,61 @@ public class UsersView extends JPanel {
 	public void setBtnHome(JButton btnHome) {
 		this.btnHome = btnHome;
 	}
-	
+
+	public JPanel getInformationPanel() {
+		return informationPanel;
+	}
+
+	public void setInformationPanel(JPanel informationPanel) {
+		this.informationPanel = informationPanel;
+	}
+
+	public JPanel getControlPanel() {
+		return controlPanel;
+	}
+
+	public void setControlPanel(JPanel controlPanel) {
+		this.controlPanel = controlPanel;
+	}
+
+	public JButton getBtnAgregar() {
+		return btnAgregar;
+	}
+
+	public void setBtnAgregar(JButton btnAgregar) {
+		this.btnAgregar = btnAgregar;
+	}
+
+	public JButton getBtnEditar() {
+		return btnEditar;
+	}
+
+	public void setBtnEditar(JButton btnEditar) {
+		this.btnEditar = btnEditar;
+	}
+
+	public JButton getBtnEliminar() {
+		return btnEliminar;
+	}
+
+	public void setBtnEliminar(JButton btnEliminar) {
+		this.btnEliminar = btnEliminar;
+	}
+
 	public JTable getUserTable() {
 		return userTable;
 	}
-	
+
 	public void setUserTable(JTable userTable) {
 		this.userTable = userTable;
 	}
-	
-	public JScrollPane getScrpUserTable() {
-		return scrpUserTable_1;
+
+	public JTextField getTextField() {
+		return textField;
 	}
-	
-	public void setScrpUserTable(JScrollPane scrpUserTable) {
-		this.scrpUserTable_1 = scrpUserTable;
+
+	public void setTextField(JTextField textField) {
+		this.textField = textField;
 	}
 
 }

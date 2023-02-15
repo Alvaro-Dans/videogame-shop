@@ -29,7 +29,7 @@ public class MainPanelInit {
 				Controller controller = new Controller(homeView, usersView, stockView, financeView, rankingView);
 
 				homeView.setController(controller);
-				usersView.setController(controller);
+				usersView.setControllerUser(controller);
 				stockView.setController(controller);
 				financeView.setController(controller);
 				rankingView.setController(controller);

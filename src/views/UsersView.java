@@ -2,6 +2,8 @@ package views;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
@@ -25,8 +27,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class UsersView extends JPanel {
 
@@ -80,107 +80,102 @@ public class UsersView extends JPanel {
 		userPanel.setBounds(10, 81, 980, 580);
 		add(userPanel);
 
-		
 		userPanel.setLayout(null);
-						
+
 		informationPanel = new JPanel();
 		informationPanel.setBounds(0, 0, 980, 492);
 		userPanel.add(informationPanel);
 		informationPanel.setLayout(null);
-								
+
 		scrpUserTable = new JScrollPane();
 		scrpUserTable.setBounds(0, 0, 980, 533);
 		informationPanel.add(scrpUserTable);
-										
+
 		userTable = new JTable();
 		userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		userTable.setBounds(0, 0, 1, 1);
 		scrpUserTable.setViewportView(userTable);
-				
+
 		controlPanel = new JPanel();
 		controlPanel.setBounds(0, 532, 980, 48);
 		FlowLayout fl_controlPanel = (FlowLayout) controlPanel.getLayout();
 		fl_controlPanel.setVgap(10);
 		fl_controlPanel.setHgap(100);
 		userPanel.add(controlPanel);
-						
+
 		btnAgregar = new JButton("AGREGAR");
 		btnAgregar.setFocusPainted(false);
 		btnAgregar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnAgregar);
-								
+
 		btnEditar = new JButton("EDITAR");
 		btnEditar.setFocusPainted(false);
 		btnEditar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnEditar);
-										
+
 		btnEliminar = new JButton("ELIMINAR");
 		btnEliminar.setFocusPainted(false);
 		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnEliminar);
-		
-				JPanel addUserPanel = new JPanel();
-				addUserPanel.setBounds(0, 0, 980, 492);
-				userPanel.add(addUserPanel);
-				addUserPanel.setLayout(null);
-					
 
-					LabelName = new JLabel("Nombre:");
-					LabelName.setBounds(313, 74, 46, 14);
-					addUserPanel.add(LabelName);
-					
-							textFieldName = new JTextField();
-							textFieldName.setBounds(369, 72, 216, 20);
-							addUserPanel.add(textFieldName);
-							textFieldName.setColumns(10);
-							
-							
-							JLabel LabelAge = new JLabel("Edad:");
-							LabelAge.setBounds(313, 126, 46, 14);
-							addUserPanel.add(LabelAge);
-							
-							textFieldAge = new JTextField();
-							textFieldAge.setColumns(10);
-							textFieldAge.setBounds(369, 124, 216, 20);
-							addUserPanel.add(textFieldAge);
-							
-							JLabel LabelGender = new JLabel("Sexo:");
-							LabelGender.setBounds(313, 180, 46, 14);
-							addUserPanel.add(LabelGender);
-							
-							textFieldGender = new JTextField();
-							textFieldGender.setColumns(10);
-							textFieldGender.setBounds(369, 178, 216, 20);
-							addUserPanel.add(textFieldGender);
-							
-							JLabel LabelPoints = new JLabel("Puntos:");
-							LabelPoints.setBounds(313, 234, 46, 14);
-							addUserPanel.add(LabelPoints);
-							
-							
-							textFieldPoints = new JTextField();
-							textFieldPoints.setColumns(10);
-							textFieldPoints.setBounds(369, 232, 216, 20);
-							addUserPanel.add(textFieldPoints);
-							//textFieldPoints.setVisible(false);
-							
-							btnOk = new JButton("Ok");
-							btnOk.setBounds(313, 321, 85, 21);
-							addUserPanel.add(btnOk);
-							
-							btnCancel = new JButton("Cancel");
-							btnCancel.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent arg0) {
-								}
-							});
-							btnCancel.setBounds(500, 321, 85, 21);
-							addUserPanel.add(btnCancel);
+		addUserPanel = new JPanel();
+		addUserPanel.setVisible(false);
+		addUserPanel.setBounds(0, 0, 980, 492);
+		userPanel.add(addUserPanel);
+		addUserPanel.setLayout(null);
 
-		
+		LabelName = new JLabel("Nombre:");
+		LabelName.setBounds(313, 74, 46, 14);
+		addUserPanel.add(LabelName);
+
+		textFieldName = new JTextField();
+		textFieldName.setBounds(369, 72, 216, 20);
+		addUserPanel.add(textFieldName);
+		textFieldName.setColumns(10);
+
+		JLabel LabelAge = new JLabel("Edad:");
+		LabelAge.setBounds(313, 126, 46, 14);
+		addUserPanel.add(LabelAge);
+
+		textFieldAge = new JTextField();
+		textFieldAge.setColumns(10);
+		textFieldAge.setBounds(369, 124, 216, 20);
+		addUserPanel.add(textFieldAge);
+
+		JLabel LabelGender = new JLabel("Sexo:");
+		LabelGender.setBounds(313, 180, 46, 14);
+		addUserPanel.add(LabelGender);
+
+		textFieldGender = new JTextField();
+		textFieldGender.setColumns(10);
+		textFieldGender.setBounds(369, 178, 216, 20);
+		addUserPanel.add(textFieldGender);
+
+		JLabel LabelPoints = new JLabel("Puntos:");
+		LabelPoints.setBounds(313, 234, 46, 14);
+		addUserPanel.add(LabelPoints);
+
+		textFieldPoints = new JTextField();
+		textFieldPoints.setColumns(10);
+		textFieldPoints.setBounds(369, 232, 216, 20);
+		addUserPanel.add(textFieldPoints);
+		// textFieldPoints.setVisible(false);
+
+		btnOk = new JButton("Ok");
+		btnOk.setBounds(313, 321, 85, 21);
+		addUserPanel.add(btnOk);
+
+		btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnCancel.setBounds(500, 321, 85, 21);
+		addUserPanel.add(btnCancel);
+
 		configurarTablas();
 
 	}
-
 
 	public void setControllerUser(Controller controller) {
 		btnHome.addActionListener(controller);
@@ -404,27 +399,20 @@ public class UsersView extends JPanel {
 		this.textFieldPoints = textFieldPoints;
 	}
 
-
 	public JButton getBtnCancel() {
 		return btnCancel;
 	}
-
 
 	public void setBtnCancel(JButton btnCancel) {
 		this.btnCancel = btnCancel;
 	}
 
-
 	public JButton getBtnOk() {
 		return btnOk;
 	}
-
 
 	public void setBtnOk(JButton btnOk) {
 		this.btnOk = btnOk;
 	}
 
-	
-	
-	
 }

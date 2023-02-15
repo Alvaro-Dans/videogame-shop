@@ -3,12 +3,12 @@ package model;
 public class Game {
 
 	private String name;
-	private double sellPrice;
-	private double rentPrice;
 	private int sellStock;
 	private int rentStock;
+	private double sellPrice;
+	private double rentPrice;
 
-	public Game(String name, double sellPrice, double rentPrice, int sellStock, int rentStock) {
+	public Game(String name, int sellStock, int rentStock, double sellPrice, double rentPrice) {
 		super();
 		this.name = name;
 		this.sellPrice = sellPrice;

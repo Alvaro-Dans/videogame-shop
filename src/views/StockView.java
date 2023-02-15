@@ -7,6 +7,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
@@ -14,11 +16,15 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
+import model.Game;
 
 public class StockView extends JPanel {
 
@@ -93,7 +99,43 @@ public class StockView extends JPanel {
 		informationPanel.add(scrpStockTable);
 
 		stockTable = new JTable();
+		stockTable.setRowHeight(25);
+		stockTable.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		stockTable.setBounds(0, 0, 1, 1);
+		ListSelectionModel cellSelectionModel = stockTable.getSelectionModel();
+		cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				int row = stockTable.getSelectedRow();
+				loadPrices(row);
+			}
+
+			private void loadPrices(int row) {
+				File file = new File("src/model/data/GameStorage.txt");
+				List<String> gameList = new ArrayList<>();
+				Scanner sc = null;
+				try {
+					sc = new Scanner(file);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				while (sc.hasNextLine()) {
+					gameList.add(sc.nextLine());
+				}
+				Double sellPrice = Double.parseDouble(gameList.get(row).split(",")[3]);
+				Double rentPrice = Double.parseDouble(gameList.get(row).split(",")[4]);
+				Double buyPrice = sellPrice - 10;
+				btnBuy.setText("Buy" + " (-" + buyPrice + "€)");
+				btnSell.setText("Sell" + " (+" + sellPrice + "€)");
+				btnRent.setText("Rent" + " (+" + rentPrice + "€)");
+
+				sc.close();
+
+			}
+
+		});
 		scrpStockTable.setViewportView(stockTable);
 		scrpStockTable.setVisible(true);
 
@@ -103,6 +145,8 @@ public class StockView extends JPanel {
 		informationPanel.add(scrpMarketTable);
 
 		marketTable = new JTable();
+		marketTable.setRowHeight(25);
+		marketTable.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		configurarTablas();
 		marketTable.setBounds(0, 0, 1, 1);
 		scrpMarketTable.setViewportView(marketTable);
@@ -140,48 +184,29 @@ public class StockView extends JPanel {
 
 	public void loadMarketData() {
 		tblMarketModel.getDataVector().clear();
-		File file = new File("src/model/data/GameStorage.txt");
-		Scanner sc = null;
-		try {
-			sc = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		while (sc.hasNextLine()) {
-			String gameData = sc.nextLine();
-			String name = gameData.split(",")[0];
-			Double sellPrice = Double.parseDouble(gameData.split(",")[3]);
-			Double rentPrice = Double.parseDouble(gameData.split(",")[4]);
+		List<Game> gameList = getGameList();
+		for (Game game : gameList) {
 			DefaultTableModel model = (DefaultTableModel) marketTable.getModel();
-			model.addRow(new Object[] { name, sellPrice, rentPrice });
+			model.addRow(new Object[] { game.getName(), game.getSellPrice(), game.getRentPrice() });
 		}
-
-		sc.close();
 	}
 
 	public void loadStockData() {
 		tblStockModel.getDataVector().clear();
-		File file = new File("src/model/data/GameStorage.txt");
-		Scanner sc = null;
-		try {
-			sc = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		while (sc.hasNextLine()) {
-			String gameData = sc.nextLine();
-			String name = gameData.split(",")[0];
-			int sellStock = Integer.parseInt(gameData.split(",")[1]);
-			int rentStock = Integer.parseInt(gameData.split(",")[2]);
+		List<Game> gameList = getGameList();
+		for (Game game : gameList) {
 			DefaultTableModel model = (DefaultTableModel) stockTable.getModel();
-			model.addRow(new Object[] { name, sellStock, rentStock });
+			model.addRow(new Object[] { game.getName(), game.getSellStock(), game.getRentStock() });
 		}
-		sc.close();
+
 	}
 
 	private void configurarTablas() {
 
 		tblStockModel = new DefaultTableModel() {
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -202,6 +227,9 @@ public class StockView extends JPanel {
 		stockTable.getColumn("RENT STOCK").setCellRenderer(cellRendStock);
 
 		tblMarketModel = new DefaultTableModel() {
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -220,6 +248,30 @@ public class StockView extends JPanel {
 		marketTable.getColumn("GAME").setCellRenderer(cellRendMarket);
 		marketTable.getColumn("SELL PRICE").setCellRenderer(cellRendMarket);
 		marketTable.getColumn("RENT PRICE").setCellRenderer(cellRendMarket);
+	}
+
+	public List<Game> getGameList() {
+
+		File file = new File("src/model/data/GameStorage.txt");
+		List<Game> gameList = new ArrayList<>();
+		Scanner sc = null;
+		try {
+			sc = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		while (sc.hasNextLine()) {
+			String game = sc.nextLine();
+			String name = game.split(",")[0];
+			int sellStock = Integer.parseInt(game.split(",")[1]);
+			int rentStock = Integer.parseInt(game.split(",")[2]);
+			Double sellPrice = Double.parseDouble(game.split(",")[3]);
+			Double rentPrice = Double.parseDouble(game.split(",")[4]);
+			gameList.add(new Game(name, sellStock, rentStock, sellPrice, rentPrice));
+		}
+
+		return gameList;
+
 	}
 
 	public JButton getBtnHome() {
@@ -292,6 +344,14 @@ public class StockView extends JPanel {
 
 	public void setScrpMarketTable(JScrollPane scrpMarketTable) {
 		this.scrpMarketTable = scrpMarketTable;
+	}
+
+	public JTable getMarketTable() {
+		return marketTable;
+	}
+
+	public void setMarketTable(JTable marketTable) {
+		this.marketTable = marketTable;
 	}
 
 }

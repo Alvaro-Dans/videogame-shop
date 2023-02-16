@@ -1,16 +1,30 @@
 package views;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.MatteBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
+import model.Finance;
 
 public class FinanceView extends JPanel {
 
@@ -18,6 +32,9 @@ public class FinanceView extends JPanel {
 
 	private JButton btnHome;
 	private JLabel lblFinance;
+	private JTable financeTable;
+	private DefaultTableModel tblFinanceModel;
+	private JLabel lblTotalPrice;
 
 	public FinanceView() {
 		setSize(1000, 700);
@@ -41,11 +58,187 @@ public class FinanceView extends JPanel {
 		});
 		add(btnHome);
 
+		financeTable = new JTable();
+		financeTable.setRowHeight(20);
+		financeTable.setBorder(null);
+		financeTable.setBackground(new Color(240, 240, 240));
+		financeTable.setShowHorizontalLines(false);
+		financeTable.setShowVerticalLines(false);
+		financeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		financeTable.setBounds(79, 134, 837, 400);
+		add(financeTable);
+
 		lblFinance = new JLabel("FINANCE");
 		lblFinance.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFinance.setFont(new Font("Tahoma", Font.BOLD, 34));
 		lblFinance.setBounds(0, 20, 1000, 41);
 		add(lblFinance);
+
+		JLabel lblQuantity = new JLabel("QUANTITY");
+		lblQuantity.setHorizontalAlignment(SwingConstants.CENTER);
+		lblQuantity.setBorder(new MatteBorder(3, 0, 3, 0, (Color) new Color(0, 0, 0)));
+		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblQuantity.setBounds(79, 100, 219, 35);
+		add(lblQuantity);
+
+		JLabel lblDescription = new JLabel("DESCRIPTION");
+		lblDescription.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDescription.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblDescription.setBorder(new MatteBorder(3, 0, 3, 0, (Color) new Color(0, 0, 0)));
+		lblDescription.setBounds(294, 100, 188, 35);
+		add(lblDescription);
+
+		JLabel lblPrice = new JLabel("PRICE PER UNIT");
+		lblPrice.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPrice.setBorder(new MatteBorder(3, 0, 3, 0, (Color) new Color(0, 0, 0)));
+		lblPrice.setBounds(459, 100, 273, 35);
+		add(lblPrice);
+
+		JLabel lblFinalPrice = new JLabel("FINAL PRICE");
+		lblFinalPrice.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFinalPrice.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblFinalPrice.setBorder(new MatteBorder(3, 0, 3, 0, (Color) new Color(0, 0, 0)));
+		lblFinalPrice.setBounds(710, 100, 206, 35);
+		add(lblFinalPrice);
+
+		JLabel lblTotal = new JLabel("TOTAL");
+		lblTotal.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblTotal.setBounds(575, 545, 64, 25);
+		add(lblTotal);
+
+		lblTotalPrice = new JLabel("");
+		lblTotalPrice.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTotalPrice.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblTotalPrice.setBounds(767, 545, 100, 25);
+		add(lblTotalPrice);
+
+		configurarTabla();
+	}
+
+	public void soldGame(int row) {
+		List<Finance> financeList = getFinanceList();
+		Finance newFinance = financeList.get(row);
+		int soldNumber = newFinance.getSoldNumber();
+		newFinance.setSoldNumber(soldNumber + 1);
+		financeList.set(row, newFinance);
+
+		File financeFile = new File("src/model/data/FinanceStorage.txt");
+		String financeTxtInfo = "";
+		try {
+			for (Finance finance : financeList) {
+				financeTxtInfo += finance.getName() + "," + finance.getSoldNumber() + "," + finance.getRentedNumber()
+						+ "," + finance.getSellPrice() + "," + finance.getRentPrice() + "\n";
+			}
+			BufferedWriter out = new BufferedWriter(new FileWriter(financeFile));
+			out.write(financeTxtInfo);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void rentedGame(int row) {
+		List<Finance> financeList = getFinanceList();
+		Finance newFinance = financeList.get(row);
+		int rentNumber = newFinance.getRentedNumber();
+		newFinance.setRentedNumber(rentNumber + 1);
+		financeList.set(row, newFinance);
+
+		File financeFile = new File("src/model/data/FinanceStorage.txt");
+		String financeTxtInfo = "";
+		try {
+			for (Finance finance : financeList) {
+				financeTxtInfo += finance.getName() + "," + finance.getSoldNumber() + "," + finance.getRentedNumber()
+						+ "," + finance.getSellPrice() + "," + finance.getRentPrice() + "\n";
+			}
+			BufferedWriter out = new BufferedWriter(new FileWriter(financeFile));
+			out.write(financeTxtInfo);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<Finance> getFinanceList() {
+
+		File file = new File("src/model/data/FinanceStorage.txt");
+		List<Finance> financeList = new ArrayList<>();
+		Scanner sc = null;
+		try {
+			sc = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		while (sc.hasNextLine()) {
+			String game = sc.nextLine();
+			Finance newFinance = new Finance();
+			newFinance.setName(game.split(",")[0]);
+			newFinance.setSoldNumber(Integer.parseInt(game.split(",")[1]));
+			newFinance.setRentedNumber(Integer.parseInt(game.split(",")[2]));
+			newFinance.setSellPrice(Double.parseDouble(game.split(",")[3]));
+			newFinance.setRentPrice(Double.parseDouble(game.split(",")[4]));
+			financeList.add(newFinance);
+		}
+
+		return financeList;
+
+	}
+
+	public void loadFinanceData() {
+		tblFinanceModel.getDataVector().clear();
+		File file = new File("src/model/data/FinanceStorage.txt");
+		Scanner sc = null;
+		Double totalPrice = 0.0;
+		try {
+			sc = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		while (sc.hasNextLine()) {
+			String game = sc.nextLine();
+			String name = game.split(",")[0];
+			int sold = Integer.parseInt(game.split(",")[1]);
+			int rented = Integer.parseInt(game.split(",")[2]);
+			Double sellPrice = Double.parseDouble(game.split(",")[3]);
+			Double rentPrice = Double.parseDouble(game.split(",")[4]);
+			Double totalSale = (double) sold * sellPrice;
+			Double totalRent = (double) rented * rentPrice;
+			totalPrice += totalSale + totalRent;
+			DefaultTableModel model = (DefaultTableModel) financeTable.getModel();
+			model.addRow(new Object[] { sold, name + " (Sold)", sellPrice + "€", totalSale + "€" });
+			model.addRow(new Object[] { rented, name + " (Rented)", rentPrice + "€", totalRent + "€" });
+		}
+		lblTotalPrice.setText(totalPrice.toString() + "€");
+	}
+
+	private void configurarTabla() {
+
+		tblFinanceModel = new DefaultTableModel() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
+		tblFinanceModel.addColumn("QUANTITY");
+		tblFinanceModel.addColumn("DESCRIPTION");
+		tblFinanceModel.addColumn("PRICE PER UNIT");
+		tblFinanceModel.addColumn("FINAL PRICE");
+
+		final DefaultTableCellRenderer cellRendFinance = new DefaultTableCellRenderer();
+		cellRendFinance.setHorizontalAlignment(SwingConstants.CENTER);
+
+		financeTable.setModel(tblFinanceModel);
+
+		financeTable.getColumn("QUANTITY").setCellRenderer(cellRendFinance);
+		financeTable.getColumn("DESCRIPTION").setCellRenderer(cellRendFinance);
+		financeTable.getColumn("PRICE PER UNIT").setCellRenderer(cellRendFinance);
+		financeTable.getColumn("FINAL PRICE").setCellRenderer(cellRendFinance);
+
 	}
 
 	public void setController(Controller controller) {
@@ -59,5 +252,4 @@ public class FinanceView extends JPanel {
 	public void setBtnHome(JButton btnHome) {
 		this.btnHome = btnHome;
 	}
-
 }

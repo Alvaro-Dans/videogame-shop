@@ -5,8 +5,10 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -19,8 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -31,6 +31,7 @@ public class StockView extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	private FinanceView financeView;
 	private JLabel lblStock;
 	private JButton btnHome;
 	private JPanel marketPanel;
@@ -106,38 +107,7 @@ public class StockView extends JPanel {
 		stockTable.setBounds(0, 0, 1, 1);
 		ListSelectionModel cellSelectionModel = stockTable.getSelectionModel();
 		cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
 
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				int row = stockTable.getSelectedRow();
-				loadPrices(row);
-			}
-
-			private void loadPrices(int row) {
-				File file = new File("src/model/data/GameStorage.txt");
-				List<String> gameList = new ArrayList<>();
-				Scanner sc = null;
-				try {
-					sc = new Scanner(file);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-				while (sc.hasNextLine()) {
-					gameList.add(sc.nextLine());
-				}
-				Double sellPrice = Double.parseDouble(gameList.get(row).split(",")[3]);
-				Double rentPrice = Double.parseDouble(gameList.get(row).split(",")[4]);
-				Double buyPrice = sellPrice - 10;
-				btnBuy.setText("Buy" + " (-" + buyPrice + "€)");
-				btnSell.setText("Sell" + " (+" + sellPrice + "€)");
-				btnRent.setText("Rent" + " (+" + rentPrice + "€)");
-
-				sc.close();
-
-			}
-
-		});
 		scrpStockTable.setViewportView(stockTable);
 		scrpStockTable.setVisible(true);
 
@@ -206,7 +176,7 @@ public class StockView extends JPanel {
 			DefaultTableModel model = (DefaultTableModel) stockTable.getModel();
 			model.addRow(new Object[] { game.getName(), game.getSellStock(), game.getRentStock() });
 		}
-
+		stockTable.clearSelection();
 	}
 
 	private void configurarTablas() {
@@ -279,6 +249,78 @@ public class StockView extends JPanel {
 		}
 
 		return gameList;
+
+	}
+
+	public void buyGame(int row) {
+		tblStockModel.getDataVector().clear();
+		List<Game> gameList = getGameList();
+		Game newGame = gameList.get(row);
+		int sellStock = newGame.getSellStock();
+		newGame.setSellStock(sellStock + 1);
+		gameList.set(row, newGame);
+
+		File file = new File("src/model/data/GameStorage.txt");
+		String txtInfo = "";
+		try {
+			for (Game game : gameList) {
+				txtInfo += game.getName() + "," + game.getSellStock() + "," + game.getRentStock() + ","
+						+ game.getSellPrice() + "," + game.getRentPrice() + "\n";
+			}
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			out.write(txtInfo);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void rentGame(int row) {
+		tblStockModel.getDataVector().clear();
+		List<Game> gameList = getGameList();
+		Game newGame = gameList.get(row);
+		int rentStock = newGame.getRentStock();
+		newGame.setRentStock(rentStock - 1);
+		gameList.set(row, newGame);
+
+		File file = new File("src/model/data/GameStorage.txt");
+		String txtInfo = "";
+		try {
+			for (Game game : gameList) {
+				txtInfo += game.getName() + "," + game.getSellStock() + "," + game.getRentStock() + ","
+						+ game.getSellPrice() + "," + game.getRentPrice() + "\n";
+			}
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			out.write(txtInfo);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void sellGame(int row) {
+		tblStockModel.getDataVector().clear();
+		List<Game> gameList = getGameList();
+		Game newGame = gameList.get(row);
+		int sellStock = newGame.getSellStock();
+		newGame.setSellStock(sellStock - 1);
+		gameList.set(row, newGame);
+
+		File file = new File("src/model/data/GameStorage.txt");
+		String txtInfo = "";
+		try {
+			for (Game game : gameList) {
+				txtInfo += game.getName() + "," + game.getSellStock() + "," + game.getRentStock() + ","
+						+ game.getSellPrice() + "," + game.getRentPrice() + "\n";
+			}
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			out.write(txtInfo);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

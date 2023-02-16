@@ -102,15 +102,34 @@ public class Controller implements ActionListener {
 		}
 
 		if (e.getSource().equals(stockView.getBtnBuy())) {
-
+			if (stockView.getStockTable().getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(stockView, "Select game to buy", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				stockView.buyGame(stockView.getStockTable().getSelectedRow());
+				stockView.loadStockData();
+			}
 		}
 
 		if (e.getSource().equals(stockView.getBtnRent())) {
-
+			if (stockView.getStockTable().getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(stockView, "Select game to rent", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				int row = stockView.getStockTable().getSelectedRow();
+				stockView.rentGame(row);
+				stockView.loadStockData();
+				financeView.rentedGame(row);
+			}
 		}
 
 		if (e.getSource().equals(stockView.getBtnSell())) {
-
+			if (stockView.getStockTable().getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(stockView, "Select game to sell", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				int row = stockView.getStockTable().getSelectedRow();
+				stockView.sellGame(row);
+				stockView.loadStockData();
+				financeView.soldGame(row);
+			}
 		}
 
 	}
@@ -264,6 +283,7 @@ public class Controller implements ActionListener {
 		if (e.getSource().equals(homeView.getBtnFinanceView())) {
 			mainPanel.loadPanel(financeView);
 			mainPanel.removePanel(homeView);
+			financeView.loadFinanceData();
 		}
 
 		if (e.getSource().equals(homeView.getBtnRankingView())) {

@@ -2,6 +2,15 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import javax.swing.JTextField;
 
 import views.FinanceView;
 import views.HomeView;
@@ -86,12 +95,40 @@ public class Controller implements ActionListener {
 			mainPanel.loadPanel(homeView);
 			mainPanel.removePanel(usersView);
 			
+			usersView.getInformationPanel().setVisible(true);
+			usersView.getAddUserPanel().setVisible(false);
+			usersView.getEditUserPanel().setVisible(false);	
+			usersView.getBtnAgregar().setEnabled(true);
+			usersView.getBtnEliminar().setEnabled(true);
+			usersView.getBtnEditar().setEnabled(true);
 		}
 		
 		if (e.getSource().equals(usersView.getBtnAgregar())) {
 			
-			usersView.getInformationPanel().setVisible(false);
-			usersView.getAddUserPanel().setVisible(true);
+			int selectedRowEdit = usersView.getUserTable().getSelectedRow();
+						
+				usersView.getInformationPanel().setVisible(false);
+				usersView.getAddUserPanel().setVisible(true);
+				usersView.getBtnEliminar().setEnabled(false);
+				usersView.getBtnEditar().setEnabled(false);
+				
+		}
+		
+		if (e.getSource().equals(usersView.getBtnOk())) {
+			
+			String name = usersView.getTextFieldName().getText();
+			Double edad = Double.parseDouble(usersView.getTextFieldAge().getText());
+			String sexo = usersView.getTextFieldGender().getText();
+			Double puntos = Double.parseDouble(usersView.getTextFieldPoints().getText());
+
+			
+			usersView.getInformationPanel().setVisible(true);
+			usersView.getAddUserPanel().setVisible(false);
+			
+			usersView.addUserData(name, edad, sexo, puntos);
+			usersView.loadUserData();
+			usersView.getBtnEditar().setEnabled(true);
+			usersView.getBtnEliminar().setEnabled(true);
 			
 		}
 		
@@ -99,16 +136,79 @@ public class Controller implements ActionListener {
 			
 			usersView.getInformationPanel().setVisible(true);
 			usersView.getAddUserPanel().setVisible(false);
-			usersView.getBtnOk().setEnabled(false);
+			usersView.getBtnEliminar().setEnabled(true);
+			usersView.getBtnEditar().setEnabled(true);
 			
 		}
 		
+		if (e.getSource().equals(usersView.getBtnEditar())) {
+			
+			
+			int selectedRowEdit = usersView.getUserTable().getSelectedRow();
+			
+			if(selectedRowEdit >= 0) {
+				
+				usersView.getInformationPanel().setVisible(false);
+				usersView.getEditUserPanel().setVisible(true);
+				usersView.getBtnEliminar().setEnabled(false);
+				usersView.getBtnAgregar().setEnabled(false);
+				
+				int selectedRow = usersView.getUserTable().getSelectedRow();
+				
+				//String name = usersView.getUserTable().getSelectedRow();
+				String name = usersView.getTblUserModel().getValueAt(selectedRow, 0).toString();
+				Double edad = Double.parseDouble(usersView.getTblUserModel().getValueAt(selectedRow, 1).toString());
+				String sexo = usersView.getTblUserModel().getValueAt(selectedRow, 2).toString();
+				Double puntos = Double.parseDouble(usersView.getTblUserModel().getValueAt(selectedRow, 3).toString());
+				
+				usersView.getTextFieldEditName().setText(name);
+			    usersView.getTextFieldEditAge().setText(edad.toString());
+			    usersView.getTextFieldEditGender().setText(sexo);
+			    usersView.getTextFieldEditPoints().setText(puntos.toString());
+			}
+			
+
+		}
 		
-
-		// devuelve fila seleccionada
-		usersView.getUserTable().getSelectedRow();
-
-	}
+		if (e.getSource().equals(usersView.getBtnEditOk())) {
+			
+			String name = usersView.getTextFieldEditName().getText();
+		    Double edad = Double.parseDouble(usersView.getTextFieldEditAge().getText());
+		    String sexo = usersView.getTextFieldEditGender().getText();
+		    Double puntos = Double.parseDouble(usersView.getTextFieldEditPoints().getText());
+		    int selectedRow = usersView.getUserTable().getSelectedRow();
+		    
+		    usersView.editUserData(name, edad, sexo, puntos, selectedRow);
+			
+			usersView.loadUserData();
+			
+			usersView.getInformationPanel().setVisible(true);
+		    usersView.getEditUserPanel().setVisible(false);
+		    usersView.getBtnEliminar().setEnabled(true);
+		    usersView.getBtnAgregar().setEnabled(true);
+			
+			
+		}
+		
+		if (e.getSource().equals(usersView.getBtnEditCancel())) {
+			
+			usersView.getInformationPanel().setVisible(true);
+			usersView.getEditUserPanel().setVisible(false);
+			usersView.getBtnEliminar().setEnabled(true);
+			usersView.getBtnAgregar().setEnabled(true);
+			
+		}
+		
+		if (e.getSource().equals(usersView.getBtnEliminar())) {
+			
+			int selectedRow = usersView.getUserTable().getSelectedRow();
+			
+		        usersView.deleteUserData();
+		        usersView.loadUserData();
+  
+			}
+		}
+			
 
 	private void homeControl(ActionEvent e) {
 		if (e.getSource().equals(homeView.getBtnUsersView())) {

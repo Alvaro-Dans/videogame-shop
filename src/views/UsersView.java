@@ -40,6 +40,7 @@ public class UsersView extends JPanel {
 	private JPanel informationPanel;// SI
 	private JPanel controlPanel;// SI
 	private JPanel addUserPanel;
+	private JPanel editUserPanel;
 	private JButton btnAgregar;
 	private JButton btnEditar;
 	private JButton btnEliminar;
@@ -52,7 +53,13 @@ public class UsersView extends JPanel {
 	private JTextField textFieldPoints;
 	private JButton btnOk;
 	private JButton btnCancel;
-	// --------------
+	private JButton btnEditOk;
+	private JButton btnEditCancel;
+	private JTextField textFieldEditName;
+	private JTextField textFieldEditAge;
+	private JTextField textFieldEditGender;
+	private JTextField textFieldEditPoints;
+	
 
 	public UsersView() {
 		setSize(1000, 700);
@@ -81,6 +88,60 @@ public class UsersView extends JPanel {
 		add(userPanel);
 
 		userPanel.setLayout(null);
+		
+		editUserPanel = new JPanel();
+		editUserPanel.setVisible(false);
+		editUserPanel.setBounds(0, 0, 980, 492);
+		userPanel.add(editUserPanel);
+		editUserPanel.setLayout(null);
+		
+		JLabel editUserLabelName = new JLabel("Nombre:");
+		editUserLabelName.setBounds(313, 74, 59, 13);
+		editUserPanel.add(editUserLabelName);
+		
+		JLabel editUserLabelAge = new JLabel("Edad:");
+		editUserLabelAge.setBounds(313, 126, 45, 13);
+		editUserPanel.add(editUserLabelAge);
+		
+		JLabel editUserLabelGender = new JLabel("Sexo:");
+		editUserLabelGender.setBounds(313, 180, 45, 13);
+		editUserPanel.add(editUserLabelGender);
+		
+		JLabel editUserLabelPoints = new JLabel("Puntos:");
+		editUserLabelPoints.setBounds(313, 234, 45, 13);
+		editUserPanel.add(editUserLabelPoints);
+		
+		textFieldEditName = new JTextField();
+		textFieldEditName.setBounds(369, 72, 216, 20);
+		editUserPanel.add(textFieldEditName);
+		textFieldEditName.setColumns(10);
+		
+		textFieldEditAge = new JTextField();
+		textFieldEditAge.setBounds(369, 124, 216, 20);
+		editUserPanel.add(textFieldEditAge);
+		textFieldEditAge.setColumns(10);
+		
+		textFieldEditGender = new JTextField();
+		textFieldEditGender.setBounds(369, 178, 216, 20);
+		editUserPanel.add(textFieldEditGender);
+		textFieldEditGender.setColumns(10);
+		
+		textFieldEditPoints = new JTextField();
+		textFieldEditPoints.setBounds(369, 232, 216, 20);
+		editUserPanel.add(textFieldEditPoints);
+		textFieldEditPoints.setColumns(10);
+		
+		btnEditOk = new JButton("Ok");
+		btnEditOk.setBounds(313, 321, 85, 21);
+		editUserPanel.add(btnEditOk);
+		
+		btnEditCancel = new JButton("Cancel");
+		btnEditCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnEditCancel.setBounds(500, 321, 85, 21);
+		editUserPanel.add(btnEditCancel);
 
 		informationPanel = new JPanel();
 		informationPanel.setBounds(0, 0, 980, 492);
@@ -125,7 +186,7 @@ public class UsersView extends JPanel {
 		addUserPanel.setLayout(null);
 
 		LabelName = new JLabel("Nombre:");
-		LabelName.setBounds(313, 74, 46, 14);
+		LabelName.setBounds(313, 74, 56, 14);
 		addUserPanel.add(LabelName);
 
 		textFieldName = new JTextField();
@@ -185,10 +246,13 @@ public class UsersView extends JPanel {
 		textFieldName.addActionListener(controller);
 		btnOk.addActionListener(controller);
 		btnCancel.addActionListener(controller);
+		btnEditOk.addActionListener(controller);
+		btnEditCancel.addActionListener(controller);
 		textFieldName.addActionListener(controller);
 		textFieldAge.addActionListener(controller);
 		textFieldGender.addActionListener(controller);
 		textFieldPoints.addActionListener(controller);
+		
 	}
 
 	public void loadUserData() {
@@ -220,12 +284,14 @@ public class UsersView extends JPanel {
 		String txtInfo = "";
 		try {
 			sc = new Scanner(file);
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			//
+			
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				txtInfo += line + "\n";
 			}
 			txtInfo += name + "," + String.valueOf(edad) + "," + sexo + "," + String.valueOf(puntos);
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
 			out.write(txtInfo);
 			out.close();
 		} catch (Exception e) {
@@ -235,6 +301,7 @@ public class UsersView extends JPanel {
 	}
 
 	public void editUserData(String name, Double edad, String sexo, Double puntos, int row) {
+		tblUserModel.getDataVector().clear();
 		File file = new File("src/model/data/UserStorage.txt");
 		List<String> usersList = new ArrayList<>();
 		Scanner sc = null;
@@ -258,8 +325,36 @@ public class UsersView extends JPanel {
 		}
 
 	}
+	
+	public void deleteUserData(){
+		
+		int selectedRow = getUserTable().getSelectedRow();
+	    if (selectedRow != -1) {
+	        tblUserModel.getDataVector().clear();
+	        File file = new File("src/model/data/UserStorage.txt");
+	        List<String> usersList = new ArrayList<>();
+	        Scanner sc = null;
+	        String txtInfo = "";
+	        try {
+	            sc = new Scanner(file);
+	            while (sc.hasNextLine()) {
+	                usersList.add(sc.nextLine());
+	            }
+	            String[] rowData = usersList.get(selectedRow).split(",");
+	            usersList.remove(selectedRow);
+	            for (String line : usersList) {
+	                txtInfo += line + "\n";
+	            }
+	            BufferedWriter out = new BufferedWriter(new FileWriter(file));
+	            out.write(txtInfo);
+	            out.close();
+	            tblUserModel.fireTableDataChanged();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
 
-	// -configurar tablas
 
 	private void configurarTablas() {
 
@@ -415,4 +510,72 @@ public class UsersView extends JPanel {
 		this.btnOk = btnOk;
 	}
 
+	public JPanel getEditUserPanel() {
+		return editUserPanel;
+	}
+
+	public void setEditUserPanel(JPanel editUserPanel) {
+		this.editUserPanel = editUserPanel;
+	}
+	
+
+	public JButton getBtnEditOk() {
+		return btnEditOk;
+	}
+
+	public void setBtnEditOk(JButton btnEditOk) {
+		this.btnEditOk = btnEditOk;
+	}
+
+	public JButton getBtnEditCancel() {
+		return btnEditCancel;
+	}
+
+	public void setBtnEditCancel(JButton btnEditCancel) {
+		this.btnEditCancel = btnEditCancel;
+	}
+
+	public JTextField getTextFieldEditName() {
+		return textFieldEditName;
+	}
+
+	public void setTextFieldEditName(JTextField textFieldEditName) {
+		this.textFieldEditName = textFieldEditName;
+	}
+
+	public JTextField getTextFieldEditAge() {
+		return textFieldEditAge;
+	}
+
+	public void setTextFieldEditAge(JTextField textFieldEditAge) {
+		this.textFieldEditAge = textFieldEditAge;
+	}
+
+	public JTextField getTextFieldEditGender() {
+		return textFieldEditGender;
+	}
+
+	public void setTextFieldEditGender(JTextField textFieldEditGender) {
+		this.textFieldEditGender = textFieldEditGender;
+	}
+
+	public JTextField getTextFieldEditPoints() {
+		return textFieldEditPoints;
+	}
+
+	public void setTextFieldEditPoints(JTextField textFieldEditPoints) {
+		this.textFieldEditPoints = textFieldEditPoints;
+	}
+
+	public DefaultTableModel getTblUserModel() {
+		return tblUserModel;
+	}
+
+	public void setTblUserModel(DefaultTableModel tblUserModel) {
+		this.tblUserModel = tblUserModel;
+	}
+	
+	
+	
+	
 }

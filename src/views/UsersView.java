@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
+import model.User;
 
 public class UsersView extends JPanel {
 
@@ -47,7 +48,8 @@ public class UsersView extends JPanel {
 	private JScrollPane scrpUserTable;
 	private JTable userTable;// SI
 	private JTextField textFieldName;
-	private JLabel LabelName;
+	private JLabel lblName;
+	private JLabel lblUsers;
 	private JTextField textFieldAge;
 	private JTextField textFieldGender;
 	private JTextField textFieldPoints;
@@ -59,7 +61,6 @@ public class UsersView extends JPanel {
 	private JTextField textFieldEditAge;
 	private JTextField textFieldEditGender;
 	private JTextField textFieldEditPoints;
-	
 
 	public UsersView() {
 		setSize(1000, 700);
@@ -88,53 +89,53 @@ public class UsersView extends JPanel {
 		add(userPanel);
 
 		userPanel.setLayout(null);
-		
+
 		editUserPanel = new JPanel();
 		editUserPanel.setVisible(false);
 		editUserPanel.setBounds(0, 0, 980, 492);
 		userPanel.add(editUserPanel);
 		editUserPanel.setLayout(null);
-		
+
 		JLabel editUserLabelName = new JLabel("Nombre:");
 		editUserLabelName.setBounds(313, 74, 59, 13);
 		editUserPanel.add(editUserLabelName);
-		
+
 		JLabel editUserLabelAge = new JLabel("Edad:");
 		editUserLabelAge.setBounds(313, 126, 45, 13);
 		editUserPanel.add(editUserLabelAge);
-		
+
 		JLabel editUserLabelGender = new JLabel("Sexo:");
 		editUserLabelGender.setBounds(313, 180, 45, 13);
 		editUserPanel.add(editUserLabelGender);
-		
+
 		JLabel editUserLabelPoints = new JLabel("Puntos:");
 		editUserLabelPoints.setBounds(313, 234, 45, 13);
 		editUserPanel.add(editUserLabelPoints);
-		
+
 		textFieldEditName = new JTextField();
 		textFieldEditName.setBounds(369, 72, 216, 20);
 		editUserPanel.add(textFieldEditName);
 		textFieldEditName.setColumns(10);
-		
+
 		textFieldEditAge = new JTextField();
 		textFieldEditAge.setBounds(369, 124, 216, 20);
 		editUserPanel.add(textFieldEditAge);
 		textFieldEditAge.setColumns(10);
-		
+
 		textFieldEditGender = new JTextField();
 		textFieldEditGender.setBounds(369, 178, 216, 20);
 		editUserPanel.add(textFieldEditGender);
 		textFieldEditGender.setColumns(10);
-		
+
 		textFieldEditPoints = new JTextField();
 		textFieldEditPoints.setBounds(369, 232, 216, 20);
 		editUserPanel.add(textFieldEditPoints);
 		textFieldEditPoints.setColumns(10);
-		
+
 		btnEditOk = new JButton("Ok");
 		btnEditOk.setBounds(313, 321, 85, 21);
 		editUserPanel.add(btnEditOk);
-		
+
 		btnEditCancel = new JButton("Cancel");
 		btnEditCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -149,7 +150,7 @@ public class UsersView extends JPanel {
 		informationPanel.setLayout(null);
 
 		scrpUserTable = new JScrollPane();
-		scrpUserTable.setBounds(0, 0, 980, 533);
+		scrpUserTable.setBounds(0, 0, 980, 492);
 		informationPanel.add(scrpUserTable);
 
 		userTable = new JTable();
@@ -185,9 +186,9 @@ public class UsersView extends JPanel {
 		userPanel.add(addUserPanel);
 		addUserPanel.setLayout(null);
 
-		LabelName = new JLabel("Nombre:");
-		LabelName.setBounds(313, 74, 56, 14);
-		addUserPanel.add(LabelName);
+		lblName = new JLabel("Nombre:");
+		lblName.setBounds(313, 74, 56, 14);
+		addUserPanel.add(lblName);
 
 		textFieldName = new JTextField();
 		textFieldName.setBounds(369, 72, 216, 20);
@@ -234,6 +235,12 @@ public class UsersView extends JPanel {
 		btnCancel.setBounds(500, 321, 85, 21);
 		addUserPanel.add(btnCancel);
 
+		lblUsers = new JLabel("USERS");
+		lblUsers.setHorizontalAlignment(SwingConstants.CENTER);
+		lblUsers.setFont(new Font("Tahoma", Font.BOLD, 34));
+		lblUsers.setBounds(0, 20, 1000, 41);
+		add(lblUsers);
+
 		configurarTablas();
 
 	}
@@ -252,12 +259,23 @@ public class UsersView extends JPanel {
 		textFieldAge.addActionListener(controller);
 		textFieldGender.addActionListener(controller);
 		textFieldPoints.addActionListener(controller);
-		
+
 	}
 
 	public void loadUserData() {
 		tblUserModel.getDataVector().clear();
+		List<User> userList = getUserList();
+		for (User user : userList) {
+			DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+			model.addRow(new Object[] { user.getName(), user.getAge(), user.getGender(), user.getPoints() });
+		}
+
+	}
+
+	public List<User> getUserList() {
+
 		File file = new File("src/model/data/UserStorage.txt");
+		List<User> userList = new ArrayList<>();
 		Scanner sc = null;
 		try {
 			sc = new Scanner(file);
@@ -265,19 +283,24 @@ public class UsersView extends JPanel {
 			e.printStackTrace();
 		}
 		while (sc.hasNextLine()) {
-			String userData = sc.nextLine();
-			String name = userData.split(",")[0];
-			Double edad = Double.parseDouble(userData.split(",")[1]);
-			String sexo = userData.split(",")[2];
-			Double puntos = Double.parseDouble(userData.split(",")[3]);
-			DefaultTableModel model = (DefaultTableModel) userTable.getModel();
-			model.addRow(new Object[] { name, edad, sexo, puntos });
+			String game = sc.nextLine();
+			String name = game.split(",")[0];
+			int age = Integer.parseInt(game.split(",")[1]);
+			String gender = game.split(",")[2];
+			Long points = Long.parseLong(game.split(",")[3]);
+			User user = new User();
+			user.setName(name);
+			user.setAge(age);
+			user.setGender(gender);
+			user.setPoints(points);
+			userList.add(user);
 		}
 
-		sc.close();
+		return userList;
+
 	}
 
-	public void addUserData(String name, Double edad, String sexo, Double puntos) {
+	public void addUserData(String name, int edad, String sexo, Long puntos) {
 		tblUserModel.getDataVector().clear();
 		File file = new File("src/model/data/UserStorage.txt");
 		Scanner sc = null;
@@ -285,7 +308,7 @@ public class UsersView extends JPanel {
 		try {
 			sc = new Scanner(file);
 			//
-			
+
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				txtInfo += line + "\n";
@@ -300,7 +323,7 @@ public class UsersView extends JPanel {
 
 	}
 
-	public void editUserData(String name, Double edad, String sexo, Double puntos, int row) {
+	public void editUserData(String name, int edad, String sexo, Long puntos, int row) {
 		tblUserModel.getDataVector().clear();
 		File file = new File("src/model/data/UserStorage.txt");
 		List<String> usersList = new ArrayList<>();
@@ -325,60 +348,62 @@ public class UsersView extends JPanel {
 		}
 
 	}
-	
-	public void deleteUserData(){
-		
-		int selectedRow = getUserTable().getSelectedRow();
-	    if (selectedRow != -1) {
-	        tblUserModel.getDataVector().clear();
-	        File file = new File("src/model/data/UserStorage.txt");
-	        List<String> usersList = new ArrayList<>();
-	        Scanner sc = null;
-	        String txtInfo = "";
-	        try {
-	            sc = new Scanner(file);
-	            while (sc.hasNextLine()) {
-	                usersList.add(sc.nextLine());
-	            }
-	            String[] rowData = usersList.get(selectedRow).split(",");
-	            usersList.remove(selectedRow);
-	            for (String line : usersList) {
-	                txtInfo += line + "\n";
-	            }
-	            BufferedWriter out = new BufferedWriter(new FileWriter(file));
-	            out.write(txtInfo);
-	            out.close();
-	            tblUserModel.fireTableDataChanged();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
-	}
 
+	public void deleteUserData() {
+
+		int selectedRow = getUserTable().getSelectedRow();
+		if (selectedRow != -1) {
+			tblUserModel.getDataVector().clear();
+			File file = new File("src/model/data/UserStorage.txt");
+			List<String> usersList = new ArrayList<>();
+			Scanner sc = null;
+			String txtInfo = "";
+			try {
+				sc = new Scanner(file);
+				while (sc.hasNextLine()) {
+					usersList.add(sc.nextLine());
+				}
+				String[] rowData = usersList.get(selectedRow).split(",");
+				usersList.remove(selectedRow);
+				for (String line : usersList) {
+					txtInfo += line + "\n";
+				}
+				BufferedWriter out = new BufferedWriter(new FileWriter(file));
+				out.write(txtInfo);
+				out.close();
+				tblUserModel.fireTableDataChanged();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	private void configurarTablas() {
 
 		tblUserModel = new DefaultTableModel() {
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
 
-		tblUserModel.addColumn("NOMBRE");
-		tblUserModel.addColumn("EDAD");
-		tblUserModel.addColumn("SEXO");
-		tblUserModel.addColumn("PUNTOS");
+		tblUserModel.addColumn("NAME");
+		tblUserModel.addColumn("AGE");
+		tblUserModel.addColumn("GENDER");
+		tblUserModel.addColumn("POINTS");
 
 		final DefaultTableCellRenderer cellRendUser = new DefaultTableCellRenderer();
 		cellRendUser.setHorizontalAlignment(SwingConstants.CENTER);
 
 		userTable.setModel(tblUserModel);
 
-		userTable.getColumn("NOMBRE").setCellRenderer(cellRendUser);
-		userTable.getColumn("EDAD").setCellRenderer(cellRendUser);
-		userTable.getColumn("SEXO").setCellRenderer(cellRendUser);
-		userTable.getColumn("PUNTOS").setCellRenderer(cellRendUser);
+		userTable.getColumn("NAME").setCellRenderer(cellRendUser);
+		userTable.getColumn("AGE").setCellRenderer(cellRendUser);
+		userTable.getColumn("GENDER").setCellRenderer(cellRendUser);
+		userTable.getColumn("POINTS").setCellRenderer(cellRendUser);
 
 	}
 
@@ -517,7 +542,6 @@ public class UsersView extends JPanel {
 	public void setEditUserPanel(JPanel editUserPanel) {
 		this.editUserPanel = editUserPanel;
 	}
-	
 
 	public JButton getBtnEditOk() {
 		return btnEditOk;
@@ -574,8 +598,5 @@ public class UsersView extends JPanel {
 	public void setTblUserModel(DefaultTableModel tblUserModel) {
 		this.tblUserModel = tblUserModel;
 	}
-	
-	
-	
-	
+
 }

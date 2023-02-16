@@ -4,15 +4,19 @@ public class User {
 
 	private String name;
 	private int age;
-	private String sex;
+	private String gender;
 	private long points;
 
 	public User(String name, int age, String sex, long points) {
 		super();
 		this.name = name;
 		this.age = age;
-		this.sex = sex;
+		this.gender = sex;
 		this.points = points;
+	}
+
+	public User() {
+
 	}
 
 	public String getName() {
@@ -31,12 +35,12 @@ public class User {
 		this.age = age;
 	}
 
-	public String getSex() {
-		return sex;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setSex(String sex) {
-		this.sex = sex;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public long getPoints() {

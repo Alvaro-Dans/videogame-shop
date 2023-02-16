@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,6 +31,7 @@ public class StockView extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	private JLabel lblStock;
 	private JButton btnHome;
 	private JPanel marketPanel;
 	private JPanel menuPanel;
@@ -171,6 +173,12 @@ public class StockView extends JPanel {
 		btnRent.setFocusPainted(false);
 		btnRent.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnRent);
+
+		lblStock = new JLabel("STOCK");
+		lblStock.setHorizontalAlignment(SwingConstants.CENTER);
+		lblStock.setFont(new Font("Tahoma", Font.BOLD, 34));
+		lblStock.setBounds(0, 20, 1000, 41);
+		add(lblStock);
 	}
 
 	public void setController(Controller controller) {

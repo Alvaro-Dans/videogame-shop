@@ -28,10 +28,10 @@ public class HomeView extends JPanel {
 		setSize(1000, 700);
 		setLayout(null);
 
-		lblInicio = new JLabel("Inicio");
+		lblInicio = new JLabel("HOME");
 		lblInicio.setFont(new Font("Tahoma", Font.BOLD, 34));
 		lblInicio.setHorizontalAlignment(SwingConstants.CENTER);
-		lblInicio.setBounds(0, 0, 984, 92);
+		lblInicio.setBounds(0, 20, 1000, 41);
 		add(lblInicio);
 
 		JPanel panel = new JPanel();

@@ -11,6 +11,7 @@ public class MainPanel extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
+	private LoginView loginView;
 	private HomeView homeView;
 	private UsersView usersView;
 	private StockView stockView;
@@ -22,8 +23,9 @@ public class MainPanel extends JFrame {
 
 	}
 
-	public MainPanel(HomeView homeView, UsersView usersView, StockView stockView, FinanceView financeView,
-			RankingView rankingView) {
+	public MainPanel(LoginView loginView, HomeView homeView, UsersView usersView, StockView stockView,
+			FinanceView financeView, RankingView rankingView) {
+		this.loginView = loginView;
 		this.homeView = homeView;
 		this.usersView = usersView;
 		this.stockView = stockView;
@@ -37,11 +39,14 @@ public class MainPanel extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 
-		loadPanels(homeView, usersView, stockView, financeView, rankingView);
+		loadPanels(loginView, homeView, usersView, stockView, financeView, rankingView);
 	}
 
-	private void loadPanels(HomeView homeView, UsersView usersView, StockView stockView, FinanceView financeView,
-			RankingView rankingView) {
+	private void loadPanels(LoginView loginView, HomeView homeView, UsersView usersView, StockView stockView,
+			FinanceView financeView, RankingView rankingView) {
+
+		getContentPane().add(loginView);
+		this.loginView.setVisible(false);
 
 		getContentPane().add(homeView);
 		this.homeView.setVisible(false);

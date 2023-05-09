@@ -2,6 +2,9 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
@@ -22,6 +25,7 @@ public class Controller implements ActionListener {
 	private FinanceView financeView;
 	private RankingView rankingView;
 	private MainPanel mainPanel = new MainPanel();
+	private Connection con = null;
 
 	public Controller(LoginView loginView, HomeView homeView, UsersView usersView, StockView stockView,
 			FinanceView financeView, RankingView rankingView) {
@@ -39,11 +43,32 @@ public class Controller implements ActionListener {
 		loginControl(e);
 		homeControl(e);
 
+		initializeDataBase();
+
 		userControl(e);
 		stockControl(e);
 		financeControl(e);
 		rankingControl(e);
 
+		closeDatabaseConnection();
+
+	}
+
+	private void closeDatabaseConnection() {
+		try {
+			con.close();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void initializeDataBase() {
+		try {
+			con = DriverManager.getConnection("jdbc:sqlite:sqlite-jdbc-3.41.2.1.jar");
+			System.out.println("Database connected");
+		} catch (Exception ex) {
+			System.out.println("Unable to connect to database");
+		}
 	}
 
 	private void loginControl(ActionEvent e) {

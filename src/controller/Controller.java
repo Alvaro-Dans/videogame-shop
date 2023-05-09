@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 
@@ -25,7 +26,7 @@ public class Controller implements ActionListener {
 	private FinanceView financeView;
 	private RankingView rankingView;
 	private MainPanel mainPanel = new MainPanel();
-	private Connection con = null;
+	private static Connection con = null;
 
 	public Controller(LoginView loginView, HomeView homeView, UsersView usersView, StockView stockView,
 			FinanceView financeView, RankingView rankingView) {
@@ -35,6 +36,7 @@ public class Controller implements ActionListener {
 		this.stockView = stockView;
 		this.financeView = financeView;
 		this.rankingView = rankingView;
+		initializeDataBase();
 	}
 
 	@Override
@@ -43,31 +45,18 @@ public class Controller implements ActionListener {
 		loginControl(e);
 		homeControl(e);
 
-		initializeDataBase();
-
 		userControl(e);
 		stockControl(e);
 		financeControl(e);
 		rankingControl(e);
 
-		closeDatabaseConnection();
-
 	}
 
-	private void closeDatabaseConnection() {
+	public static void closeDatabaseConnection() {
 		try {
 			con.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
-		}
-	}
-
-	private void initializeDataBase() {
-		try {
-			con = DriverManager.getConnection("jdbc:sqlite:sqlite-jdbc-3.41.2.1.jar");
-			System.out.println("Database connected");
-		} catch (Exception ex) {
-			System.out.println("Unable to connect to database");
 		}
 	}
 
@@ -317,6 +306,54 @@ public class Controller implements ActionListener {
 			rankingView.loadRankingData();
 		}
 
+	}
+
+	/**
+	 * Method to initialize database and create the tables if there haven't been created yet.
+	 */
+	private void initializeDataBase() {
+		try {
+			con = DriverManager.getConnection("jdbc:sqlite:src/model/data/database.db");
+			System.out.println("Database connected.");
+			
+			String createUserTable = "CREATE TABLE USER ("
+					+ "Name varchar(20),"
+					+ "Age integer,"
+					+ "Sex varchar(10),"
+					+ "Points integer);";
+			String createGameTable = "CREATE TABLE GAME ("
+					+ "Name varchar(20),"
+					+ "SellStock integer,"
+					+ "RentStock integer,"
+					+ "SellPrice double(5,5),"
+					+ "RentPrice double(5,5));";
+			String createFinanceTable = "CREATE TABLE FINANCE ("
+					+ "Name varchar(20),"
+					+ "SoldNumber integer,"
+					+ "RentedNumber integer,"
+					+ "SellPrice double(5,5),"
+					+ "RentPrice double(5,5));";
+
+			Statement stmt = con.createStatement();
+			stmt.execute(createUserTable);
+			System.out.println("Table USER created.");
+			stmt.execute(createGameTable);
+			System.out.println("Table GAME created.");
+			stmt.execute(createFinanceTable);
+			System.out.println("Table FINANCE created.");
+		} catch (Exception ex) {
+			try {
+				Statement stmt = con.createStatement();
+				stmt.execute("SELECT Name FROM sqlite_schema WHERE type='table' AND name='USER';");
+				System.out.println("Table USER loaded.");
+				stmt.execute("SELECT Name FROM sqlite_schema WHERE type='table' AND name='GAME';");
+				System.out.println("Table GAME loaded.");
+				stmt.execute("SELECT Name FROM sqlite_schema WHERE type='table' AND name='FINANCE';");
+				System.out.println("Table FINANCE loaded.");
+			} catch(Exception ex1) {
+				System.out.println("Unable to connect to Database");
+			}
+		}
 	}
 
 }

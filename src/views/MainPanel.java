@@ -3,9 +3,13 @@ package views;
 
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import controller.Controller;
 
 public class MainPanel extends JFrame {
 
@@ -62,6 +66,15 @@ public class MainPanel extends JFrame {
 
 		getContentPane().add(rankingView);
 		this.rankingView.setVisible(false);
+
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				super.windowClosing(e);
+				Controller.closeDatabaseConnection();
+				System.out.println("Database connection closed.");
+			}
+		});
 
 	}
 

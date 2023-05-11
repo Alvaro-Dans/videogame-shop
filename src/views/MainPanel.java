@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import controller.Controller;
+import controller.DatabaseController;
 
 public class MainPanel extends JFrame {
 
@@ -71,7 +71,7 @@ public class MainPanel extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
-				Controller.closeDatabaseConnection();
+				DatabaseController.closeDatabaseConnection();
 				System.out.println("Database connection closed.");
 			}
 		});

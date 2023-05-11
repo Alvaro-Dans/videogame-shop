@@ -8,7 +8,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -262,41 +261,12 @@ public class UsersView extends JPanel {
 
 	}
 
-	public void loadUserData() {
+	public void loadUserData(List<User> databaseUserList) {
 		tblUserModel.getDataVector().clear();
-		List<User> userList = getUserList();
-		for (User user : userList) {
+		for (User user : databaseUserList) {
 			DefaultTableModel model = (DefaultTableModel) userTable.getModel();
 			model.addRow(new Object[] { user.getName(), user.getAge(), user.getGender(), user.getPoints() });
 		}
-
-	}
-
-	public List<User> getUserList() {
-
-		File file = new File("src/model/data/UserStorage.txt");
-		List<User> userList = new ArrayList<>();
-		Scanner sc = null;
-		try {
-			sc = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		while (sc.hasNextLine()) {
-			String game = sc.nextLine();
-			String name = game.split(",")[0];
-			int age = Integer.parseInt(game.split(",")[1]);
-			String gender = game.split(",")[2];
-			Long points = Long.parseLong(game.split(",")[3]);
-			User user = new User();
-			user.setName(name);
-			user.setAge(age);
-			user.setGender(gender);
-			user.setPoints(points);
-			userList.add(user);
-		}
-
-		return userList;
 
 	}
 

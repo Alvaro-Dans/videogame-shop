@@ -4,13 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -116,95 +110,20 @@ public class FinanceView extends JPanel {
 		configurarTabla();
 	}
 
-	public void soldGame(int row) {
-		List<Finance> financeList = getFinanceList();
-		Finance newFinance = financeList.get(row);
-		int soldNumber = newFinance.getSoldNumber();
-		newFinance.setSoldNumber(soldNumber + 1);
-		financeList.set(row, newFinance);
-
-		File financeFile = new File("src/model/data/FinanceStorage.txt");
-		String financeTxtInfo = "";
-		try {
-			for (Finance finance : financeList) {
-				financeTxtInfo += finance.getName() + "," + finance.getSoldNumber() + "," + finance.getRentedNumber()
-						+ "," + finance.getSellPrice() + "," + finance.getRentPrice() + "\n";
-			}
-			BufferedWriter out = new BufferedWriter(new FileWriter(financeFile));
-			out.write(financeTxtInfo);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void rentedGame(int row) {
-		List<Finance> financeList = getFinanceList();
-		Finance newFinance = financeList.get(row);
-		int rentNumber = newFinance.getRentedNumber();
-		newFinance.setRentedNumber(rentNumber + 1);
-		financeList.set(row, newFinance);
-
-		File financeFile = new File("src/model/data/FinanceStorage.txt");
-		String financeTxtInfo = "";
-		try {
-			for (Finance finance : financeList) {
-				financeTxtInfo += finance.getName() + "," + finance.getSoldNumber() + "," + finance.getRentedNumber()
-						+ "," + finance.getSellPrice() + "," + finance.getRentPrice() + "\n";
-			}
-			BufferedWriter out = new BufferedWriter(new FileWriter(financeFile));
-			out.write(financeTxtInfo);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public List<Finance> getFinanceList() {
-
-		File file = new File("src/model/data/FinanceStorage.txt");
-		List<Finance> financeList = new ArrayList<>();
-		Scanner sc = null;
-		try {
-			sc = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		while (sc.hasNextLine()) {
-			String game = sc.nextLine();
-			Finance newFinance = new Finance();
-			newFinance.setName(game.split(",")[0]);
-			newFinance.setSoldNumber(Integer.parseInt(game.split(",")[1]));
-			newFinance.setRentedNumber(Integer.parseInt(game.split(",")[2]));
-			newFinance.setSellPrice(Double.parseDouble(game.split(",")[3]));
-			newFinance.setRentPrice(Double.parseDouble(game.split(",")[4]));
-			financeList.add(newFinance);
-		}
-
-		return financeList;
-
-	}
-
-	public void loadFinanceData() {
+	public void loadFinanceData(List<Finance> financeList) {
 		tblFinanceModel.getDataVector().clear();
-		File file = new File("src/model/data/FinanceStorage.txt");
-		Scanner sc = null;
 		Double totalPrice = 0.0;
-		try {
-			sc = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		while (sc.hasNextLine()) {
-			String game = sc.nextLine();
-			String name = game.split(",")[0];
-			int sold = Integer.parseInt(game.split(",")[1]);
-			int rented = Integer.parseInt(game.split(",")[2]);
-			Double sellPrice = Double.parseDouble(game.split(",")[3]);
-			Double rentPrice = Double.parseDouble(game.split(",")[4]);
+
+		for (Finance finance : financeList) {
+			String name = finance.getName();
+			int sold = finance.getSoldNumber();
+			int rented = finance.getRentedNumber();
+			Double sellPrice = finance.getSellPrice();
+			Double rentPrice = finance.getRentPrice();
 			Double totalSale = (double) sold * sellPrice;
 			Double totalRent = (double) rented * rentPrice;
 			totalPrice += totalSale + totalRent;
+			
 			DefaultTableModel model = (DefaultTableModel) financeTable.getModel();
 			model.addRow(new Object[] { sold, name + " (Sold)", sellPrice + "€", totalSale + "€" });
 			model.addRow(new Object[] { rented, name + " (Rented)", rentPrice + "€", totalRent + "€" });

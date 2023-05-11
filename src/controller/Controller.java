@@ -2,9 +2,12 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import model.User;
 import views.FinanceView;
 import views.HomeView;
 import views.LoginView;
@@ -81,7 +84,7 @@ public class Controller implements ActionListener {
 
 	private void stockControl(ActionEvent e) {
 		
-		//TODO hacer que admin pueda añadir juegos y editarlos
+		//TODO hacer que admin pueda aï¿½adir juegos y editarlos
 		
 		if (e.getSource().equals(stockView.getBtnHome())) {
 			mainPanel.loadPanel(homeView);
@@ -178,14 +181,19 @@ public class Controller implements ActionListener {
 					usersView.getInformationPanel().setVisible(true);
 					usersView.getAddUserPanel().setVisible(false);
 
-					usersView.addUserData(name, age, gender, points);
-					usersView.loadUserData();
+					dbController.insertUser(name, age, gender, points, "user");
+					
+					List<User> userList = dbController.selectAllUser(); 
+					usersView.loadUserData(userList);
+					
 					usersView.getBtnEditar().setEnabled(true);
 					usersView.getBtnEliminar().setEnabled(true);
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(usersView, "Errors found in fields", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
+				
+
 
 			}
 
@@ -236,9 +244,16 @@ public class Controller implements ActionListener {
 			Long points = Long.parseLong(usersView.getTextFieldEditPoints().getText());
 			int selectedRow = usersView.getUserTable().getSelectedRow();
 
-			usersView.editUserData(name, age, gender, points, selectedRow);
+			try {
+				dbController.editUser(usersView.getUserTable().getValueAt(selectedRow, 0).toString(), name, age, gender, points);
+				List<User> userList = dbController.selectAllUser(); 
+				usersView.loadUserData(userList);
 
-			usersView.loadUserData();
+			} catch (SQLException e1) {
+				
+				JOptionPane.showMessageDialog(usersView, "Unable to edit user", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+
 
 			usersView.getInformationPanel().setVisible(true);
 			usersView.getEditUserPanel().setVisible(false);
@@ -261,8 +276,16 @@ public class Controller implements ActionListener {
 			int selectedRow = usersView.getUserTable().getSelectedRow();
 
 			if (selectedRow >= 0) {
-				usersView.deleteUserData();
-				usersView.loadUserData();
+				try {
+					dbController.deleteUser((String) usersView.getUserTable().getValueAt(selectedRow, 0));
+					List<User> userList = dbController.selectAllUser(); 
+					usersView.loadUserData(userList);
+				} catch (SQLException e1) {
+					
+					JOptionPane.showMessageDialog(usersView, "Unable to delete user", "Error", JOptionPane.ERROR_MESSAGE);
+
+				}
+
 			} else {
 				JOptionPane.showMessageDialog(usersView, "Select an user please", "Error", JOptionPane.ERROR_MESSAGE);
 			}
@@ -274,7 +297,17 @@ public class Controller implements ActionListener {
 		if (e.getSource().equals(homeView.getBtnUsersView())) {
 			mainPanel.loadPanel(usersView);
 			mainPanel.removePanel(homeView);
-			usersView.loadUserData();
+			
+			List<User> userList;
+			try {
+				userList = dbController.selectAllUser();
+				usersView.loadUserData(userList);
+			} catch (SQLException e1) {
+				
+				JOptionPane.showMessageDialog(usersView, "Unable to load user data", "Error", JOptionPane.ERROR_MESSAGE);
+				
+			} 
+			
 		}
 
 		if (e.getSource().equals(homeView.getBtnStockView())) {

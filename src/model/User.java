@@ -2,17 +2,22 @@ package model;
 
 public class User {
 
+
 	private String name;
 	private int age;
 	private String gender;
 	private long points;
+	private String role;
 
-	public User(String name, int age, String sex, long points) {
+	public User( String name, int age, String gender, long points, String role) {
 		super();
+		
+
 		this.name = name;
 		this.age = age;
-		this.gender = sex;
+		this.gender = gender;
 		this.points = points;
+		this.role = role;
 	}
 
 	public User() {
@@ -50,5 +55,18 @@ public class User {
 	public void setPoints(long points) {
 		this.points = points;
 	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+
+	
+	
+	
 
 }

@@ -261,92 +261,21 @@ public class UsersView extends JPanel {
 
 	}
 
+	
 	public void loadUserData(List<User> databaseUserList) {
 		tblUserModel.getDataVector().clear();
 		for (User user : databaseUserList) {
 			DefaultTableModel model = (DefaultTableModel) userTable.getModel();
-			model.addRow(new Object[] { user.getName(), user.getAge(), user.getGender(), user.getPoints() });
+			model.addRow(new Object[] {user.getName(), user.getAge(), user.getGender(), user.getPoints(), user.getRole() });
 		}
 
 	}
 
-	public void addUserData(String name, int edad, String sexo, Long puntos) {
-		tblUserModel.getDataVector().clear();
-		File file = new File("src/model/data/UserStorage.txt");
-		Scanner sc = null;
-		String txtInfo = "";
-		try {
-			sc = new Scanner(file);
-			//
 
-			while (sc.hasNextLine()) {
-				String line = sc.nextLine();
-				txtInfo += line + "\n";
-			}
-			txtInfo += name + "," + String.valueOf(edad) + "," + sexo + "," + String.valueOf(puntos);
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			out.write(txtInfo);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-	}
 
-	public void editUserData(String name, int edad, String sexo, Long puntos, int row) {
-		tblUserModel.getDataVector().clear();
-		File file = new File("src/model/data/UserStorage.txt");
-		List<String> usersList = new ArrayList<>();
-		Scanner sc = null;
-		String txtInfo = "";
-		try {
-			sc = new Scanner(file);
-			while (sc.hasNextLine()) {
-				usersList.add(sc.nextLine());
-			}
-			usersList.set(row, name + "," + String.valueOf(edad) + "," + sexo + "," + String.valueOf(puntos));
 
-			for (String line : usersList) {
-				txtInfo += line + "\n";
-			}
 
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			out.write(txtInfo);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void deleteUserData() {
-
-		int selectedRow = getUserTable().getSelectedRow();
-		if (selectedRow != -1) {
-			tblUserModel.getDataVector().clear();
-			File file = new File("src/model/data/UserStorage.txt");
-			List<String> usersList = new ArrayList<>();
-			Scanner sc = null;
-			String txtInfo = "";
-			try {
-				sc = new Scanner(file);
-				while (sc.hasNextLine()) {
-					usersList.add(sc.nextLine());
-				}
-				String[] rowData = usersList.get(selectedRow).split(",");
-				usersList.remove(selectedRow);
-				for (String line : usersList) {
-					txtInfo += line + "\n";
-				}
-				BufferedWriter out = new BufferedWriter(new FileWriter(file));
-				out.write(txtInfo);
-				out.close();
-				tblUserModel.fireTableDataChanged();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	private void configurarTablas() {
 

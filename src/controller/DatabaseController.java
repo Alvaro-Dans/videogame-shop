@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Finance;
+import model.User;
 
 public class DatabaseController {
 
@@ -19,41 +20,38 @@ public class DatabaseController {
 		initializeDataBase();
 	}
 
-	public void insertUser(int id, String name, int age, String sex, Long points, String role) throws SQLException {
-		String insertSQL = "INSERT INTO USER (id, UserName, Age, Sex, Points, Role) VALUES (?, ?, ?, ?, ?, ?);";
+	public void insertUser(String name, int age, String gender, Long points, String role) throws SQLException {
+		String insertSQL = "INSERT INTO USER (UserName, Age, Gender, Points, Role) VALUES (?, ?, ?, ?, ?);";
 
 		PreparedStatement pstmt = con.prepareStatement(insertSQL);
-		pstmt.setInt(1, id);
-		pstmt.setString(2, name);
-		pstmt.setInt(3, age);
-		pstmt.setString(4, sex);
-		pstmt.setLong(5, points);
-		pstmt.setString(6, role);
+		pstmt.setString(1, name);
+		pstmt.setInt(2, age);
+		pstmt.setString(3, gender);
+		pstmt.setLong(4, points);
+		pstmt.setString(5, role);
 		pstmt.executeUpdate();
 	}
 
-	public void insertFinanceOperation(int id, String game, int soldNumber, int rentedNumber, double sellPrice,
+	public void insertFinanceOperation(String game, int soldNumber, int rentedNumber, double sellPrice,
 			double rentPrice) throws SQLException {
-		String insertSQL = "INSERT INTO FINANCE (id, Game, SoldNumber, RentedNumber, SellPrice, RentPrice) VALUES (?, ?, ?, ?, ?, ?);";
+		String insertSQL = "INSERT INTO FINANCE (Game, SoldNumber, RentedNumber, SellPrice, RentPrice) VALUES (?, ?, ?, ?, ?);";
 
 		PreparedStatement pstmt = con.prepareStatement(insertSQL);
-		pstmt.setInt(1, id);
-		pstmt.setString(2, game);
-		pstmt.setInt(3, soldNumber);
-		pstmt.setInt(4, rentedNumber);
-		pstmt.setDouble(5, sellPrice);
-		pstmt.setDouble(6, rentPrice);
+		pstmt.setString(1, game);
+		pstmt.setInt(2, soldNumber);
+		pstmt.setInt(3, rentedNumber);
+		pstmt.setDouble(4, sellPrice);
+		pstmt.setDouble(5, rentPrice);
 		pstmt.executeUpdate();
 	}
 
-	public void insertGame(int id, String name, int sellStock, int rentStock) throws SQLException {
-		String insertSQL = "INSERT INTO GAME (id, GameName, SellStock, RentStock) VALUES (?, ?, ?, ?);";
+	public void insertGame(String name, int sellStock, int rentStock) throws SQLException {
+		String insertSQL = "INSERT INTO GAME (GameName, SellStock, RentStock) VALUES (?, ?, ?);";
 
 		PreparedStatement pstmt = con.prepareStatement(insertSQL);
-		pstmt.setInt(1, id);
-		pstmt.setString(2, name);
-		pstmt.setInt(3, sellStock);
-		pstmt.setInt(4, rentStock);
+		pstmt.setString(1, name);
+		pstmt.setInt(2, sellStock);
+		pstmt.setInt(3, rentStock);
 		pstmt.executeUpdate();
 	}
 
@@ -79,11 +77,55 @@ public class DatabaseController {
 		}
 		return financeList;
 	}
+	
+	
+	//LISTA USER
+	public List<User> selectAllUser() throws SQLException {
+		List<User> databaseUserList = new ArrayList<>();
+		String selectSQL = "SELECT * FROM USER;";
 
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(selectSQL);
+
+		while (rs.next()) {
+			databaseUserList.add(new User(rs.getString("UserName"), rs.getInt("Age"), rs.getString("Gender"), rs.getLong("Points"), rs.getString("Role")));
+		}
+		return databaseUserList;
+	}
+	
+	
+	public void deleteUser(String user) throws SQLException {
+		
+		String insertSQL = "DELETE FROM USER WHERE UserName='"+ user +"';";
+
+		PreparedStatement pstmt = con.prepareStatement(insertSQL);
+	
+		pstmt.executeUpdate();
+	}
+	
+	
+	
+	public void editUser(String user, String name, int age, String gender, Long points) throws SQLException {
+		
+		String insertSQL = "UPDATE USER"
+				+ "\nSET UserName=" + "'" + name + "'" + ", "
+				+ "Age=" + String.valueOf(age)+ ", "
+				+ "Gender=" + "'" + gender + "'" + ", "
+				+ "Points=" +String.valueOf(points)
+				+ "\nWHERE UserName=" + "'" + user + "'" + ";";
+
+		PreparedStatement pstmt = con.prepareStatement(insertSQL);
+		pstmt.executeUpdate();
+		
+		
+	}
+	
 	/**
 	 * Method to initialize database and create the tables if there haven't been
 	 * created yet.
 	 */
+	
+	
 	private void initializeDataBase() {
 		try {
 			con = DriverManager.getConnection("jdbc:sqlite:src/model/data/database.db");

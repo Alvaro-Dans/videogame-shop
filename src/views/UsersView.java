@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -27,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
 import model.User;
+import javax.swing.JComboBox;
 
 public class UsersView extends JPanel {
 
@@ -50,7 +52,6 @@ public class UsersView extends JPanel {
 	private JLabel lblName;
 	private JLabel lblUsers;
 	private JTextField textFieldAge;
-	private JTextField textFieldGender;
 	private JTextField textFieldPoints;
 	private JButton btnOk;
 	private JButton btnCancel;
@@ -58,8 +59,9 @@ public class UsersView extends JPanel {
 	private JButton btnEditCancel;
 	private JTextField textFieldEditName;
 	private JTextField textFieldEditAge;
-	private JTextField textFieldEditGender;
 	private JTextField textFieldEditPoints;
+	private JComboBox<String> comboBoxGender;
+	private JComboBox<String> comboBoxEditGender;
 
 	public UsersView() {
 		setSize(1000, 700);
@@ -88,61 +90,126 @@ public class UsersView extends JPanel {
 		add(userPanel);
 
 		userPanel.setLayout(null);
-
+		
+		addUserPanel = new JPanel();
+		addUserPanel.setVisible(false);
+		
 		editUserPanel = new JPanel();
 		editUserPanel.setVisible(false);
+				
 		editUserPanel.setBounds(0, 0, 980, 492);
 		userPanel.add(editUserPanel);
 		editUserPanel.setLayout(null);
-
+						
+						
 		JLabel editUserLabelName = new JLabel("Nombre:");
 		editUserLabelName.setBounds(313, 74, 59, 13);
 		editUserPanel.add(editUserLabelName);
-
+								
 		JLabel editUserLabelAge = new JLabel("Edad:");
 		editUserLabelAge.setBounds(313, 126, 45, 13);
 		editUserPanel.add(editUserLabelAge);
-
+										
 		JLabel editUserLabelGender = new JLabel("Sexo:");
 		editUserLabelGender.setBounds(313, 180, 45, 13);
 		editUserPanel.add(editUserLabelGender);
-
+												
 		JLabel editUserLabelPoints = new JLabel("Puntos:");
 		editUserLabelPoints.setBounds(313, 234, 45, 13);
 		editUserPanel.add(editUserLabelPoints);
-
+														
 		textFieldEditName = new JTextField();
 		textFieldEditName.setBounds(369, 72, 216, 20);
 		editUserPanel.add(textFieldEditName);
 		textFieldEditName.setColumns(10);
-
+																
 		textFieldEditAge = new JTextField();
 		textFieldEditAge.setBounds(369, 124, 216, 20);
 		editUserPanel.add(textFieldEditAge);
 		textFieldEditAge.setColumns(10);
-
-		textFieldEditGender = new JTextField();
-		textFieldEditGender.setBounds(369, 178, 216, 20);
-		editUserPanel.add(textFieldEditGender);
-		textFieldEditGender.setColumns(10);
-
+																		
 		textFieldEditPoints = new JTextField();
 		textFieldEditPoints.setBounds(369, 232, 216, 20);
 		editUserPanel.add(textFieldEditPoints);
 		textFieldEditPoints.setColumns(10);
-
+																		
 		btnEditOk = new JButton("Ok");
 		btnEditOk.setBounds(313, 321, 85, 21);
 		editUserPanel.add(btnEditOk);
-
 		btnEditCancel = new JButton("Cancel");
 		btnEditCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
+		public void actionPerformed(ActionEvent e) {
+		}
 		});
 		btnEditCancel.setBounds(500, 321, 85, 21);
 		editUserPanel.add(btnEditCancel);
+		
+																						
+		comboBoxEditGender = new JComboBox<String>();
+		comboBoxEditGender.setBounds(368, 176, 217, 21);
+		editUserPanel.add(comboBoxEditGender);
+		addUserPanel.setBounds(0, 0, 980, 492);
+		userPanel.add(addUserPanel);
+		addUserPanel.setLayout(null);
+		comboBoxEditGender.addItem("MASCULINO");
+		comboBoxEditGender.addItem("FEMENINO");
+				
+		lblName = new JLabel("Nombre:");
+		lblName.setBounds(313, 74, 56, 14);
+		addUserPanel.add(lblName);
+						
+		textFieldName = new JTextField();
+		textFieldName.setBounds(369, 72, 216, 20);
+		addUserPanel.add(textFieldName);
+		textFieldName.setColumns(10);
+								
+		JLabel LabelAge = new JLabel("Edad:");
+		LabelAge.setBounds(313, 126, 46, 14);
+		addUserPanel.add(LabelAge);
+										
+		textFieldAge = new JTextField();
+		textFieldAge.setColumns(10);
+		textFieldAge.setBounds(369, 124, 216, 20);
+		addUserPanel.add(textFieldAge);
+												
+		JLabel LabelGender = new JLabel("Sexo:");
+		LabelGender.setBounds(313, 180, 46, 14);
+		addUserPanel.add(LabelGender);
+														
+														
+		JLabel LabelPoints = new JLabel("Puntos:");
+		LabelPoints.setBounds(313, 234, 46, 14);
+		addUserPanel.add(LabelPoints);
+																
+		textFieldPoints = new JTextField();
+		textFieldPoints.setColumns(10);
+		textFieldPoints.setBounds(369, 232, 216, 20);
+		addUserPanel.add(textFieldPoints);
+		// textFieldPoints.setVisible(false);
 
+		btnOk = new JButton("Ok");
+		btnOk.setBounds(313, 321, 85, 21);
+		addUserPanel.add(btnOk);
+																		
+		btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {
+		}
+		});
+		btnCancel.setBounds(500, 321, 85, 21);
+		addUserPanel.add(btnCancel);
+																				
+		comboBoxGender = new JComboBox<String>();
+		comboBoxGender.setBounds(368, 177, 217, 21);
+		addUserPanel.add(comboBoxGender);
+
+		comboBoxGender.addItem("MASCULINO");
+		comboBoxGender.addItem("FEMENINO");
+
+		
+		
+		
+		
 		informationPanel = new JPanel();
 		informationPanel.setBounds(0, 0, 980, 492);
 		userPanel.add(informationPanel);
@@ -179,61 +246,6 @@ public class UsersView extends JPanel {
 		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		controlPanel.add(btnEliminar);
 
-		addUserPanel = new JPanel();
-		addUserPanel.setVisible(false);
-		addUserPanel.setBounds(0, 0, 980, 492);
-		userPanel.add(addUserPanel);
-		addUserPanel.setLayout(null);
-
-		lblName = new JLabel("Nombre:");
-		lblName.setBounds(313, 74, 56, 14);
-		addUserPanel.add(lblName);
-
-		textFieldName = new JTextField();
-		textFieldName.setBounds(369, 72, 216, 20);
-		addUserPanel.add(textFieldName);
-		textFieldName.setColumns(10);
-
-		JLabel LabelAge = new JLabel("Edad:");
-		LabelAge.setBounds(313, 126, 46, 14);
-		addUserPanel.add(LabelAge);
-
-		textFieldAge = new JTextField();
-		textFieldAge.setColumns(10);
-		textFieldAge.setBounds(369, 124, 216, 20);
-		addUserPanel.add(textFieldAge);
-
-		JLabel LabelGender = new JLabel("Sexo:");
-		LabelGender.setBounds(313, 180, 46, 14);
-		addUserPanel.add(LabelGender);
-
-		textFieldGender = new JTextField();
-		textFieldGender.setColumns(10);
-		textFieldGender.setBounds(369, 178, 216, 20);
-		addUserPanel.add(textFieldGender);
-
-		JLabel LabelPoints = new JLabel("Puntos:");
-		LabelPoints.setBounds(313, 234, 46, 14);
-		addUserPanel.add(LabelPoints);
-
-		textFieldPoints = new JTextField();
-		textFieldPoints.setColumns(10);
-		textFieldPoints.setBounds(369, 232, 216, 20);
-		addUserPanel.add(textFieldPoints);
-		// textFieldPoints.setVisible(false);
-
-		btnOk = new JButton("Ok");
-		btnOk.setBounds(313, 321, 85, 21);
-		addUserPanel.add(btnOk);
-
-		btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnCancel.setBounds(500, 321, 85, 21);
-		addUserPanel.add(btnCancel);
-
 		lblUsers = new JLabel("USERS");
 		lblUsers.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsers.setFont(new Font("Tahoma", Font.BOLD, 34));
@@ -256,8 +268,9 @@ public class UsersView extends JPanel {
 		btnEditCancel.addActionListener(controller);
 		textFieldName.addActionListener(controller);
 		textFieldAge.addActionListener(controller);
-		textFieldGender.addActionListener(controller);
 		textFieldPoints.addActionListener(controller);
+		comboBoxGender.addActionListener(controller);
+		comboBoxEditGender.addActionListener(controller);
 
 	}
 
@@ -402,13 +415,6 @@ public class UsersView extends JPanel {
 		this.textFieldAge = textFieldAge;
 	}
 
-	public JTextField getTextFieldGender() {
-		return textFieldGender;
-	}
-
-	public void setTextFieldGender(JTextField textFieldGender) {
-		this.textFieldGender = textFieldGender;
-	}
 
 	public JTextField getTextFieldPoints() {
 		return textFieldPoints;
@@ -474,13 +480,6 @@ public class UsersView extends JPanel {
 		this.textFieldEditAge = textFieldEditAge;
 	}
 
-	public JTextField getTextFieldEditGender() {
-		return textFieldEditGender;
-	}
-
-	public void setTextFieldEditGender(JTextField textFieldEditGender) {
-		this.textFieldEditGender = textFieldEditGender;
-	}
 
 	public JTextField getTextFieldEditPoints() {
 		return textFieldEditPoints;
@@ -497,5 +496,23 @@ public class UsersView extends JPanel {
 	public void setTblUserModel(DefaultTableModel tblUserModel) {
 		this.tblUserModel = tblUserModel;
 	}
+
+	public JComboBox getComboBoxGender() {
+		return comboBoxGender;
+	}
+
+	public void setComboBoxGender(JComboBox comboBoxGender) {
+		this.comboBoxGender = comboBoxGender;
+	}
+
+	public JComboBox<String> getComboBoxEditGender() {
+		return comboBoxEditGender;
+	}
+
+	public void setComboBoxEditGender(JComboBox<String> comboBoxEditGender) {
+		this.comboBoxEditGender = comboBoxEditGender;
+	}
+
+	
 
 }

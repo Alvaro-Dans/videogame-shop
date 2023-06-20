@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -64,6 +65,25 @@ public class Controller implements ActionListener {
 				JOptionPane.showMessageDialog(loginView, "Invalid Credentials", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		
+		if (e.getSource().equals(loginView.getBtnSignUp())) {
+			loginView.getLogInPanel().setVisible(false);;
+			loginView.getSignUpPanel().setVisible(true);;
+
+		}
+		
+		if (e.getSource().equals(loginView.getBtnSignUpCancel())) {
+			loginView.getLogInPanel().setVisible(true);;
+			loginView.getSignUpPanel().setVisible(false);;
+
+		}
+		
+		if (e.getSource().equals(loginView.getBtnSignUpOk())) {
+			loginView.getLogInPanel().setVisible(true);;
+			loginView.getSignUpPanel().setVisible(false);;
+
+		}
+		
 
 	}
 
@@ -181,7 +201,7 @@ public class Controller implements ActionListener {
 		if (e.getSource().equals(usersView.getBtnOk())) {
 
 			if (usersView.getTextFieldName().getText().isEmpty() || usersView.getTextFieldAge().getText().isEmpty()
-					|| usersView.getTextFieldGender().getText().isEmpty()
+					|| usersView.getComboBoxGender().getSelectedIndex() == -1
 					|| usersView.getTextFieldPoints().getText().isEmpty()) {
 
 				JOptionPane.showMessageDialog(usersView, "Please fill all the fields", "Error",
@@ -191,7 +211,7 @@ public class Controller implements ActionListener {
 				try {
 					String name = usersView.getTextFieldName().getText();
 					int age = Integer.parseInt(usersView.getTextFieldAge().getText());
-					String gender = usersView.getTextFieldGender().getText();
+					String gender = (String)usersView.getComboBoxGender().getSelectedItem();
 					Long points = Long.parseLong(usersView.getTextFieldPoints().getText());
 
 					usersView.getInformationPanel().setVisible(true);
@@ -242,7 +262,7 @@ public class Controller implements ActionListener {
 
 				usersView.getTextFieldEditName().setText(name);
 				usersView.getTextFieldEditAge().setText(edad.toString());
-				usersView.getTextFieldEditGender().setText(sexo);
+				usersView.getComboBoxEditGender().setToolTipText(sexo);
 				usersView.getTextFieldEditPoints().setText(puntos.toString());
 			} else {
 				JOptionPane.showMessageDialog(usersView, "Select an user please", "Error", JOptionPane.ERROR_MESSAGE);
@@ -254,7 +274,7 @@ public class Controller implements ActionListener {
 
 			String name = usersView.getTextFieldEditName().getText();
 			int age = Integer.parseInt(usersView.getTextFieldEditAge().getText());
-			String gender = usersView.getTextFieldEditGender().getText();
+			String gender = (String)usersView.getComboBoxEditGender().getSelectedItem();
 			Long points = Long.parseLong(usersView.getTextFieldEditPoints().getText());
 			int selectedRow = usersView.getUserTable().getSelectedRow();
 

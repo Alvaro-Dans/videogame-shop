@@ -19,7 +19,7 @@ public class MainPanelInit {
 			@Override
 			public void run() {
 
-				LoginView loginView = new LoginView();              
+				LoginView loginView = new LoginView();
 				HomeView homeView = new HomeView();
 				UsersView usersView = new UsersView();
 				StockView stockView = new StockView();

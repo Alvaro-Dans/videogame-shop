@@ -1,6 +1,5 @@
 package controller;
 
-import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Finance;
+import model.Game;
 import model.User;
 
 public class DatabaseController {
@@ -21,7 +21,7 @@ public class DatabaseController {
 		initializeDataBase();
 	}
 
-	public void insertUser(String name, int age, String gender, Long points, String role) throws SQLException {
+	public void insertUser(String name, int age, String gender, Long points) throws SQLException {
 		String insertSQL = "INSERT INTO USER (UserName, Age, Gender, Points, Role) VALUES (?, ?, ?, ?, ?);";
 
 		PreparedStatement pstmt = con.prepareStatement(insertSQL);
@@ -29,7 +29,7 @@ public class DatabaseController {
 		pstmt.setInt(2, age);
 		pstmt.setString(3, gender);
 		pstmt.setLong(4, points);
-		pstmt.setString(5, role);
+		pstmt.setString(5, "user");
 		pstmt.executeUpdate();
 		System.out.println(pstmt.toString() + " -> OK\n");
 	}
@@ -82,7 +82,7 @@ public class DatabaseController {
 		}
 		return financeList;
 	}
-	
+
 	public List<User> selectAllUser() throws SQLException {
 		List<User> databaseUserList = new ArrayList<>();
 		String selectSQL = "SELECT * FROM USER;";
@@ -91,38 +91,64 @@ public class DatabaseController {
 		ResultSet rs = st.executeQuery(selectSQL);
 		System.out.println(selectSQL + " -> OK\n");
 		while (rs.next()) {
-			databaseUserList.add(new User(rs.getString("UserName"), rs.getInt("Age"), rs.getString("Gender"), rs.getLong("Points"), rs.getString("Role")));
+			databaseUserList.add(new User(rs.getString("UserName"), rs.getInt("Age"), rs.getString("Gender"),
+					rs.getLong("Points"), rs.getString("Role")));
 		}
 		return databaseUserList;
 	}
-	
-	
+
+	public String selectUserAccessPasswsord(String user) throws SQLException {
+		String selectSQL = "SELECT Password FROM USER_ACCESS" + " WHERE User='" + user + "';";
+
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(selectSQL);
+		System.out.println(selectSQL + " -> OK\n");
+		return null != rs.getString("Password") ? rs.getString("Password") : null;
+	}
+
+	public String selectUserType(String user) throws SQLException {
+		String selectSQL = "SELECT Role FROM USER" + " WHERE UserName='" + user + "';";
+
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(selectSQL);
+		System.out.println(selectSQL + " -> OK\n");
+		return rs.getString("Role");
+	}
+
+	public List<Game> selectAllGames() throws SQLException {
+		List<Game> databaseGameList = new ArrayList<>();
+		String selectSQL = "SELECT * FROM GAME;";
+
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(selectSQL);
+		System.out.println(selectSQL + " -> OK\n");
+		while (rs.next()) {
+			databaseGameList.add(new Game(rs.getString("GameName"), rs.getInt("SellStock"), rs.getInt("RentStock")));
+		}
+		return databaseGameList;
+	}
+
 	public void deleteUser(String user) throws SQLException {
-		
-		String deleteSQL = "DELETE FROM USER WHERE UserName='"+ user +"';";
+
+		String deleteSQL = "DELETE FROM USER WHERE UserName='" + user + "';";
 
 		PreparedStatement pstmt = con.prepareStatement(deleteSQL);
 		pstmt.executeUpdate();
 		System.out.println(deleteSQL + " -> OK\n");
 	}
-	
-	
-	
+
 	public void updateUser(String user, String name, int age, String gender, Long points) throws SQLException {
-		
-		String updateSQL = "UPDATE USER"
-				+ "\nSET UserName=" + "'" + name + "'" + ", "
-				+ "Age=" + String.valueOf(age)+ ", "
-				+ "Gender=" + "'" + gender + "'" + ", "
-				+ "Points=" +String.valueOf(points)
+
+		String updateSQL = "UPDATE USER" + "\nSET UserName=" + "'" + name + "'" + ", " + "Age=" + String.valueOf(age)
+				+ ", " + "Gender=" + "'" + gender + "'" + ", " + "Points=" + String.valueOf(points)
 				+ "\nWHERE UserName=" + "'" + user + "'" + ";";
 
 		PreparedStatement pstmt = con.prepareStatement(updateSQL);
 		pstmt.executeUpdate();
 		System.out.println(updateSQL + " -> OK\n");
-		
+
 	}
-	
+
 	public Finance selectFinanceByName(String game) throws SQLException {
 		String selectSQL = "SELECT * FROM FINANCE WHERE Game=" + "'" + game + "'" + ";";
 
@@ -132,17 +158,39 @@ public class DatabaseController {
 		return new Finance(rs.getString("Game"), rs.getInt("SoldNumber"), rs.getInt("RentedNumber"),
 				rs.getDouble("SellPrice"), rs.getDouble("RentPrice"));
 	}
-	
-	public void updateFinanceById(String game, int soldNumber, int rentedNumber) throws SQLException {
-		String updateSQL = "UPDATE FINANCE"
-				+ "\nSET SoldNumber=" + String.valueOf(soldNumber) + ", "
-				+ "RentedNumber=  " + String.valueOf(rentedNumber)
-				+ "\nWHERE Game=" + "'" + game + "'" + ";";
+
+	public void updateSoldFinanceById(String game, String operation) throws SQLException {
+		String updateSQL = "UPDATE FINANCE" + "\nSET " + "SoldNumber = SoldNumber" + operation + "\nWHERE Game=" + "'"
+				+ game + "'" + ";";
 		PreparedStatement pstmt = con.prepareStatement(updateSQL);
 		pstmt.executeUpdate();
 		System.out.println(updateSQL + " -> OK\n");
 	}
-	
+
+	public void updateRentFinanceById(String game, String operation) throws SQLException {
+		String updateSQL = "UPDATE FINANCE" + "\nSET " + "RentedNumber = RentedNumber" + operation + "\nWHERE Game="
+				+ "'" + game + "'" + ";";
+		PreparedStatement pstmt = con.prepareStatement(updateSQL);
+		pstmt.executeUpdate();
+		System.out.println(updateSQL + " -> OK\n");
+	}
+
+	public void updateSellStockById(String game, String operation) throws SQLException {
+		String updateSQL = "UPDATE GAME" + "\nSET SellStock = " + "SellStock " + operation + "\nWHERE GameName=" + "'"
+				+ game + "'" + ";";
+		PreparedStatement pstmt = con.prepareStatement(updateSQL);
+		pstmt.executeUpdate();
+		System.out.println(updateSQL + " -> OK\n");
+	}
+
+	public void updateRentStockById(String game, String operation) throws SQLException {
+		String updateSQL = "UPDATE GAME" + "\nSET RentStock = " + "RentStock " + operation + "\nWHERE GameName=" + "'"
+				+ game + "'" + ";";
+		PreparedStatement pstmt = con.prepareStatement(updateSQL);
+		pstmt.executeUpdate();
+		System.out.println(updateSQL + " -> OK\n");
+	}
+
 	/**
 	 * Method to initialize database and create the tables if there haven't been
 	 * created yet.

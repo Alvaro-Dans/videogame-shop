@@ -115,7 +115,7 @@ public class FinanceView extends JPanel {
 		Double totalPrice = 0.0;
 
 		for (Finance finance : financeList) {
-			String name = finance.getName();
+			String name = finance.getGameName();
 			int sold = finance.getSoldNumber();
 			int rented = finance.getRentedNumber();
 			Double sellPrice = finance.getSellPrice();
@@ -123,7 +123,7 @@ public class FinanceView extends JPanel {
 			Double totalSale = (double) sold * sellPrice;
 			Double totalRent = (double) rented * rentPrice;
 			totalPrice += totalSale + totalRent;
-			
+
 			DefaultTableModel model = (DefaultTableModel) financeTable.getModel();
 			model.addRow(new Object[] { sold, name + " (Sold)", sellPrice + "€", totalSale + "€" });
 			model.addRow(new Object[] { rented, name + " (Rented)", rentPrice + "€", totalRent + "€" });

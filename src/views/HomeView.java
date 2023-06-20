@@ -20,9 +20,9 @@ public class HomeView extends JPanel {
 	private JLabel lblInicio;
 	private JButton btnStockView;
 	private JButton btnFinanceView;
-	private JButton btnRankingView;
 	private JButton btnUsersView;
-	private JButton btnHome;
+	private JButton btnRankingView;
+	private JButton btnLogout;
 
 	public HomeView() {
 		setSize(1000, 700);
@@ -39,14 +39,14 @@ public class HomeView extends JPanel {
 		add(panel);
 		panel.setLayout(new GridLayout(2, 1, 0, 0));
 
-		btnUsersView = new JButton("");
-		btnUsersView.setFocusPainted(false);
-		btnUsersView.setBorderPainted(false);
-		btnUsersView.setBorder(null);
-		btnUsersView.setBackground(null);
-		btnUsersView.setContentAreaFilled(false);
-		btnUsersView.setIcon(new ImageIcon(HomeView.class.getResource("/images/clientes.png")));
-		panel.add(btnUsersView);
+		btnRankingView = new JButton("");
+		btnRankingView.setFocusPainted(false);
+		btnRankingView.setBorderPainted(false);
+		btnRankingView.setBorder(null);
+		btnRankingView.setBackground(null);
+		btnRankingView.setContentAreaFilled(false);
+		btnRankingView.setIcon(new ImageIcon(HomeView.class.getResource("/images/badge.png")));
+		panel.add(btnRankingView);
 
 		btnStockView = new JButton("");
 		btnStockView.setFocusPainted(false);
@@ -66,48 +66,48 @@ public class HomeView extends JPanel {
 		btnFinanceView.setIcon(new ImageIcon(HomeView.class.getResource("/images/facturas.png")));
 		panel.add(btnFinanceView);
 
-		btnRankingView = new JButton("");
-		btnRankingView.setFocusPainted(false);
-		btnRankingView.setBorderPainted(false);
-		btnRankingView.setBorder(null);
-		btnRankingView.setBackground(null);
-		btnRankingView.setContentAreaFilled(false);
-		btnRankingView.setIcon(new ImageIcon(HomeView.class.getResource("/images/badge.png")));
-		panel.add(btnRankingView);
+		btnUsersView = new JButton("");
+		btnUsersView.setFocusPainted(false);
+		btnUsersView.setBorderPainted(false);
+		btnUsersView.setBorder(null);
+		btnUsersView.setBackground(null);
+		btnUsersView.setContentAreaFilled(false);
+		btnUsersView.setIcon(new ImageIcon(HomeView.class.getResource("/images/clientes.png")));
+		panel.add(btnUsersView);
 
-		btnHome = new JButton("");
-		btnHome.setIcon(new ImageIcon(HomeView.class.getResource("/images/home.png")));
-		btnHome.setFocusPainted(false);
-		btnHome.setBounds(20, 20, 50, 50);
-		btnHome.setBorder(null);
-		btnHome.setBackground(null);
-		btnHome.setContentAreaFilled(false);
-		btnHome.addMouseListener(new MouseAdapter() {
+		btnLogout = new JButton("");
+		btnLogout.setIcon(new ImageIcon(HomeView.class.getResource("/images/logout.png")));
+		btnLogout.setFocusPainted(false);
+		btnLogout.setBounds(20, 20, 50, 50);
+		btnLogout.setBorder(null);
+		btnLogout.setBackground(null);
+		btnLogout.setContentAreaFilled(false);
+		btnLogout.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent evt) {
-				btnHome.setIcon(new ImageIcon(HomeView.class.getResource("/images/home_grande.png")));
+				btnLogout.setIcon(new ImageIcon(HomeView.class.getResource("/images/logout_grande.png")));
 			}
 
 			public void mouseExited(MouseEvent evt) {
-				btnHome.setIcon(new ImageIcon(HomeView.class.getResource("/images/home.png")));
+				btnLogout.setIcon(new ImageIcon(HomeView.class.getResource("/images/logout.png")));
 			}
 		});
-		add(btnHome);
+		add(btnLogout);
 	}
 
 	public void setController(Controller controller) {
-		btnHome.addActionListener(controller);
-		btnUsersView.addActionListener(controller);
+		btnLogout.addActionListener(controller);
 		btnRankingView.addActionListener(controller);
+		btnUsersView.addActionListener(controller);
 		btnStockView.addActionListener(controller);
 		btnFinanceView.addActionListener(controller);
 	}
 
-	public JButton getBtnHome() {
-		return btnHome;
+	public JButton getBtnLogout() {
+		return btnLogout;
 	}
 
-	public void setBtnHome(JButton btnHome) {
-		this.btnHome = btnHome;
+	public void setBtnLogout(JButton btnLogout) {
+		this.btnLogout = btnLogout;
 	}
 
 	public JButton getBtnStockView() {
@@ -134,11 +134,11 @@ public class HomeView extends JPanel {
 		this.btnRankingView = btnRankingView;
 	}
 
-	public JButton getBtnUsersView() {
+	public JButton getbtnUsersView() {
 		return btnUsersView;
 	}
 
-	public void setBtnUsersView(JButton btnUsersView) {
+	public void setbtnUsersView(JButton btnUsersView) {
 		this.btnUsersView = btnUsersView;
 	}
 

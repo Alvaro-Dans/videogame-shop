@@ -5,13 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,13 +19,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controller.Controller;
+import model.Finance;
 import model.Game;
 
 public class StockView extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private FinanceView financeView;
 	private JLabel lblStock;
 	private JButton btnHome;
 	private JPanel marketPanel;
@@ -40,7 +34,6 @@ public class StockView extends JPanel {
 	private JButton btnMarketPanel;
 	private JPanel informationPanel;
 	private JPanel controlPanel;
-	private JButton btnSell;
 	private JButton btnBuy;
 	private JButton btnRent;
 	private JTable stockTable;
@@ -129,11 +122,6 @@ public class StockView extends JPanel {
 		fl_controlPanel.setHgap(100);
 		marketPanel.add(controlPanel, BorderLayout.SOUTH);
 
-		btnSell = new JButton("Sell");
-		btnSell.setFocusPainted(false);
-		btnSell.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		controlPanel.add(btnSell);
-
 		btnBuy = new JButton("Buy");
 		btnBuy.setFocusPainted(false);
 		btnBuy.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -156,22 +144,19 @@ public class StockView extends JPanel {
 		btnBuy.addActionListener(controller);
 		btnMarketPanel.addActionListener(controller);
 		btnRent.addActionListener(controller);
-		btnSell.addActionListener(controller);
 		btnStockPanel.addActionListener(controller);
 	}
 
-	public void loadMarketData() {
+	public void loadMarketData(List<Finance> financeList) {
 		tblMarketModel.getDataVector().clear();
-		List<Game> gameList = getGameList();
-		for (Game game : gameList) {
+		for (Finance finance : financeList) {
 			DefaultTableModel model = (DefaultTableModel) marketTable.getModel();
-			model.addRow(new Object[] { game.getName(), game.getSellPrice(), game.getRentPrice() });
+			model.addRow(new Object[] { finance.getGameName(), finance.getSellPrice(), finance.getRentPrice() });
 		}
 	}
 
-	public void loadStockData() {
+	public void loadStockData(List<Game> gameList) {
 		tblStockModel.getDataVector().clear();
-		List<Game> gameList = getGameList();
 		for (Game game : gameList) {
 			DefaultTableModel model = (DefaultTableModel) stockTable.getModel();
 			model.addRow(new Object[] { game.getName(), game.getSellStock(), game.getRentStock() });
@@ -228,100 +213,12 @@ public class StockView extends JPanel {
 		marketTable.getColumn("RENT PRICE").setCellRenderer(cellRendMarket);
 	}
 
-	public List<Game> getGameList() {
-
-		File file = new File("src/model/data/GameStorage.txt");
-		List<Game> gameList = new ArrayList<>();
-		Scanner sc = null;
-		try {
-			sc = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		while (sc.hasNextLine()) {
-			String game = sc.nextLine();
-			String name = game.split(",")[0];
-			int sellStock = Integer.parseInt(game.split(",")[1]);
-			int rentStock = Integer.parseInt(game.split(",")[2]);
-			Double sellPrice = Double.parseDouble(game.split(",")[3]);
-			Double rentPrice = Double.parseDouble(game.split(",")[4]);
-			gameList.add(new Game(name, sellStock, rentStock, sellPrice, rentPrice));
-		}
-
-		return gameList;
-
+	public JLabel getLblStock() {
+		return lblStock;
 	}
 
-	public void buyGame(int row) {
-		tblStockModel.getDataVector().clear();
-		List<Game> gameList = getGameList();
-		Game newGame = gameList.get(row);
-		int sellStock = newGame.getSellStock();
-		newGame.setSellStock(sellStock + 1);
-		gameList.set(row, newGame);
-
-		File file = new File("src/model/data/GameStorage.txt");
-		String txtInfo = "";
-		try {
-			for (Game game : gameList) {
-				txtInfo += game.getName() + "," + game.getSellStock() + "," + game.getRentStock() + ","
-						+ game.getSellPrice() + "," + game.getRentPrice() + "\n";
-			}
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			out.write(txtInfo);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void rentGame(int row) {
-		tblStockModel.getDataVector().clear();
-		List<Game> gameList = getGameList();
-		Game newGame = gameList.get(row);
-		int rentStock = newGame.getRentStock();
-		newGame.setRentStock(rentStock - 1);
-		gameList.set(row, newGame);
-
-		File file = new File("src/model/data/GameStorage.txt");
-		String txtInfo = "";
-		try {
-			for (Game game : gameList) {
-				txtInfo += game.getName() + "," + game.getSellStock() + "," + game.getRentStock() + ","
-						+ game.getSellPrice() + "," + game.getRentPrice() + "\n";
-			}
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			out.write(txtInfo);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void sellGame(int row) {
-		tblStockModel.getDataVector().clear();
-		List<Game> gameList = getGameList();
-		Game newGame = gameList.get(row);
-		int sellStock = newGame.getSellStock();
-		newGame.setSellStock(sellStock - 1);
-		gameList.set(row, newGame);
-
-		File file = new File("src/model/data/GameStorage.txt");
-		String txtInfo = "";
-		try {
-			for (Game game : gameList) {
-				txtInfo += game.getName() + "," + game.getSellStock() + "," + game.getRentStock() + ","
-						+ game.getSellPrice() + "," + game.getRentPrice() + "\n";
-			}
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			out.write(txtInfo);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+	public void setLblStock(JLabel lblStock) {
+		this.lblStock = lblStock;
 	}
 
 	public JButton getBtnHome() {
@@ -330,6 +227,22 @@ public class StockView extends JPanel {
 
 	public void setBtnHome(JButton btnHome) {
 		this.btnHome = btnHome;
+	}
+
+	public JPanel getMarketPanel() {
+		return marketPanel;
+	}
+
+	public void setMarketPanel(JPanel marketPanel) {
+		this.marketPanel = marketPanel;
+	}
+
+	public JPanel getMenuPanel() {
+		return menuPanel;
+	}
+
+	public void setMenuPanel(JPanel menuPanel) {
+		this.menuPanel = menuPanel;
 	}
 
 	public JButton getBtnStockPanel() {
@@ -348,20 +261,20 @@ public class StockView extends JPanel {
 		this.btnMarketPanel = btnMarketPanel;
 	}
 
-	public JTable getStockTable() {
-		return stockTable;
+	public JPanel getInformationPanel() {
+		return informationPanel;
 	}
 
-	public void setStockTable(JTable stockTable) {
-		this.stockTable = stockTable;
+	public void setInformationPanel(JPanel informationPanel) {
+		this.informationPanel = informationPanel;
 	}
 
-	public JButton getBtnSell() {
-		return btnSell;
+	public JPanel getControlPanel() {
+		return controlPanel;
 	}
 
-	public void setBtnSell(JButton btnSell) {
-		this.btnSell = btnSell;
+	public void setControlPanel(JPanel controlPanel) {
+		this.controlPanel = controlPanel;
 	}
 
 	public JButton getBtnBuy() {
@@ -378,6 +291,14 @@ public class StockView extends JPanel {
 
 	public void setBtnRent(JButton btnRent) {
 		this.btnRent = btnRent;
+	}
+
+	public JTable getStockTable() {
+		return stockTable;
+	}
+
+	public void setStockTable(JTable stockTable) {
+		this.stockTable = stockTable;
 	}
 
 	public JScrollPane getScrpStockTable() {
@@ -402,6 +323,22 @@ public class StockView extends JPanel {
 
 	public void setMarketTable(JTable marketTable) {
 		this.marketTable = marketTable;
+	}
+
+	public DefaultTableModel getTblStockModel() {
+		return tblStockModel;
+	}
+
+	public void setTblStockModel(DefaultTableModel tblStockModel) {
+		this.tblStockModel = tblStockModel;
+	}
+
+	public DefaultTableModel getTblMarketModel() {
+		return tblMarketModel;
+	}
+
+	public void setTblMarketModel(DefaultTableModel tblMarketModel) {
+		this.tblMarketModel = tblMarketModel;
 	}
 
 }

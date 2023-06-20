@@ -5,14 +5,10 @@ public class Game {
 	private String name;
 	private int sellStock;
 	private int rentStock;
-	private double sellPrice;
-	private double rentPrice;
 
-	public Game(String name, int sellStock, int rentStock, double sellPrice, double rentPrice) {
+	public Game(String name, int sellStock, int rentStock) {
 		super();
 		this.name = name;
-		this.sellPrice = sellPrice;
-		this.rentPrice = rentPrice;
 		this.sellStock = sellStock;
 		this.rentStock = rentStock;
 	}
@@ -23,22 +19,6 @@ public class Game {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public double getSellPrice() {
-		return sellPrice;
-	}
-
-	public void setSellPrice(double sellPrice) {
-		this.sellPrice = sellPrice;
-	}
-
-	public double getRentPrice() {
-		return rentPrice;
-	}
-
-	public void setRentPrice(double rentPrice) {
-		this.rentPrice = rentPrice;
 	}
 
 	public int getSellStock() {

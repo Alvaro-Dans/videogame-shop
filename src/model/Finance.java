@@ -2,15 +2,15 @@ package model;
 
 public class Finance {
 
-	private String name;
+	private String gameName;
 	private int soldNumber;
 	private int rentedNumber;
 	private double sellPrice;
 	private double rentPrice;
 
-	public Finance(String name, int soldNumber, int rentedNumber, double sellPrice, double rentPrice) {
+	public Finance(String gameName, int soldNumber, int rentedNumber, double sellPrice, double rentPrice) {
 		super();
-		this.name = name;
+		this.gameName = gameName;
 		this.soldNumber = soldNumber;
 		this.rentedNumber = rentedNumber;
 		this.sellPrice = sellPrice;
@@ -21,12 +21,12 @@ public class Finance {
 
 	}
 
-	public String getName() {
-		return name;
+	public String getGameName() {
+		return gameName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setGameName(String name) {
+		this.gameName = name;
 	}
 
 	public int getSoldNumber() {

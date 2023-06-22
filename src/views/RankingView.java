@@ -3,11 +3,7 @@ package views;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -75,38 +71,19 @@ public class RankingView extends JPanel {
 		configurarTabla();
 	}
 
-	public void loadRankingData() {
+	public void loadRankingData(List<User> userList) {
 		tblRankingModel.getDataVector().clear();
-		List<User> userList = getUserList();
+		for (int i = 0; i < userList.size(); i++) {
+			if(userList.get(i).getName().equals("admin")) {
+				userList.remove(i);
+				break;
+			}
+		}
 		userList.sort((u1, u2) -> (int) u2.getPoints() - (int) u1.getPoints());
 		for (User user : userList) {
 			DefaultTableModel model = (DefaultTableModel) rankingTable.getModel();
 			model.addRow(new Object[] { user.getName(), user.getPoints() });
 		}
-
-	}
-
-	public List<User> getUserList() {
-
-		File file = new File("src/model/data/UserStorage.txt");
-		List<User> userList = new ArrayList<>();
-		Scanner sc = null;
-		try {
-			sc = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		while (sc.hasNextLine()) {
-			String userLine = sc.nextLine();
-			String name = userLine.split(",")[0];
-			Long points = Long.parseLong(userLine.split(",")[3]);
-			User user = new User();
-			user.setName(name);
-			user.setPoints(points);
-			userList.add(user);
-		}
-
-		return userList;
 
 	}
 

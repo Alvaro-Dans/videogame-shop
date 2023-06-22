@@ -440,7 +440,7 @@ public class Controller implements ActionListener {
 				try {
 					stockView.loadMarketData(dbController.selectAllFinance());
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(usersView, "Unable to load finance data", "Error",
+					JOptionPane.showMessageDialog(stockView, "Unable to load game data", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 				mainPanel.loadPanel(stockView);
@@ -458,7 +458,7 @@ public class Controller implements ActionListener {
 				try {
 					stockView.loadStockData(dbController.selectAllGames());
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(usersView, "Unable to load game data", "Error",
+					JOptionPane.showMessageDialog(stockView, "Unable to load game data", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -472,7 +472,7 @@ public class Controller implements ActionListener {
 				financeList = dbController.selectAllFinance();
 				financeView.loadFinanceData(financeList);
 			} catch (SQLException e1) {
-				JOptionPane.showMessageDialog(stockView, "Unable to select finance", "Error",
+				JOptionPane.showMessageDialog(financeView, "Unable to select finance", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
 
@@ -480,8 +480,15 @@ public class Controller implements ActionListener {
 
 		if (e.getSource().equals(homeView.getBtnRankingView())) {
 			mainPanel.loadPanel(rankingView);
+			List<User> userList;
+			try {
+				userList = dbController.selectAllUser();
+				rankingView.loadRankingData(userList);
+			} catch (SQLException e1) {
+				JOptionPane.showMessageDialog(rankingView, "Unable to load user data", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
 			mainPanel.removePanel(homeView);
-			rankingView.loadRankingData();
 		}
 
 	}

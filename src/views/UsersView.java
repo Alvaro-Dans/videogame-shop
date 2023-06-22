@@ -263,6 +263,12 @@ public class UsersView extends JPanel {
 
 	public void loadUserData(List<User> databaseUserList) {
 		tblUserModel.getDataVector().clear();
+		for (int i = 0; i < databaseUserList.size(); i++) {
+			if(databaseUserList.get(i).getName().equals("admin")) {
+				databaseUserList.remove(i);
+				break;
+			}
+		}
 		for (User user : databaseUserList) {
 			DefaultTableModel model = (DefaultTableModel) userTable.getModel();
 			model.addRow(

@@ -136,6 +136,15 @@ public class DatabaseController {
 		pstmt.executeUpdate();
 		System.out.println(deleteSQL + " -> OK\n");
 	}
+	
+	public void deleteUserAccess(String user) throws SQLException {
+
+		String deleteSQL = "DELETE FROM USER_ACCESS WHERE User='" + user + "';";
+
+		PreparedStatement pstmt = con.prepareStatement(deleteSQL);
+		pstmt.executeUpdate();
+		System.out.println(deleteSQL + " -> OK\n");
+	}
 
 	public void updateUser(String user, String name, int age, String gender, Long points) throws SQLException {
 

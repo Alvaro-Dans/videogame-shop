@@ -261,18 +261,8 @@ public class Controller implements ActionListener {
 			usersView.getInformationPanel().setVisible(true);
 			usersView.getAddUserPanel().setVisible(false);
 			usersView.getEditUserPanel().setVisible(false);
-			usersView.getBtnAgregar().setEnabled(true);
 			usersView.getBtnEliminar().setEnabled(true);
 			usersView.getBtnEditar().setEnabled(true);
-		}
-
-		if (e.getSource().equals(usersView.getBtnAgregar())) {
-
-			usersView.getInformationPanel().setVisible(false);
-			usersView.getAddUserPanel().setVisible(true);
-			usersView.getBtnEliminar().setEnabled(false);
-			usersView.getBtnEditar().setEnabled(false);
-
 		}
 
 		if (e.getSource().equals(usersView.getBtnOk())) {
@@ -328,7 +318,6 @@ public class Controller implements ActionListener {
 				usersView.getInformationPanel().setVisible(false);
 				usersView.getEditUserPanel().setVisible(true);
 				usersView.getBtnEliminar().setEnabled(false);
-				usersView.getBtnAgregar().setEnabled(false);
 
 				int selectedRow = usersView.getUserTable().getSelectedRow();
 
@@ -369,7 +358,6 @@ public class Controller implements ActionListener {
 			usersView.getInformationPanel().setVisible(true);
 			usersView.getEditUserPanel().setVisible(false);
 			usersView.getBtnEliminar().setEnabled(true);
-			usersView.getBtnAgregar().setEnabled(true);
 
 		}
 
@@ -378,7 +366,6 @@ public class Controller implements ActionListener {
 			usersView.getInformationPanel().setVisible(true);
 			usersView.getEditUserPanel().setVisible(false);
 			usersView.getBtnEliminar().setEnabled(true);
-			usersView.getBtnAgregar().setEnabled(true);
 
 		}
 
@@ -389,6 +376,7 @@ public class Controller implements ActionListener {
 			if (selectedRow >= 0) {
 				try {
 					dbController.deleteUser((String) usersView.getUserTable().getValueAt(selectedRow, 0));
+					dbController.deleteUserAccess((String) usersView.getUserTable().getValueAt(selectedRow, 0));
 					List<User> userList = dbController.selectAllUser();
 					usersView.loadUserData(userList);
 				} catch (SQLException e1) {

@@ -37,7 +37,6 @@ public class UsersView extends JPanel {
 	private JPanel controlPanel;// SI
 	private JPanel addUserPanel;
 	private JPanel editUserPanel;
-	private JButton btnAgregar;
 	private JButton btnEditar;
 	private JButton btnEliminar;
 	private JScrollPane scrpUserTable;
@@ -218,11 +217,6 @@ public class UsersView extends JPanel {
 		fl_controlPanel.setHgap(100);
 		userPanel.add(controlPanel);
 
-		btnAgregar = new JButton("AGREGAR");
-		btnAgregar.setFocusPainted(false);
-		btnAgregar.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		controlPanel.add(btnAgregar);
-
 		btnEditar = new JButton("EDITAR");
 		btnEditar.setFocusPainted(false);
 		btnEditar.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -245,7 +239,6 @@ public class UsersView extends JPanel {
 
 	public void setControllerUser(Controller controller) {
 		btnHome.addActionListener(controller);
-		btnAgregar.addActionListener(controller);
 		btnEditar.addActionListener(controller);
 		btnEliminar.addActionListener(controller);
 		textFieldName.addActionListener(controller);
@@ -328,14 +321,6 @@ public class UsersView extends JPanel {
 
 	public void setControlPanel(JPanel controlPanel) {
 		this.controlPanel = controlPanel;
-	}
-
-	public JButton getBtnAgregar() {
-		return btnAgregar;
-	}
-
-	public void setBtnAgregar(JButton btnAgregar) {
-		this.btnAgregar = btnAgregar;
 	}
 
 	public JButton getBtnEditar() {

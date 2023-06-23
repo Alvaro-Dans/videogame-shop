@@ -421,6 +421,7 @@ public class Controller implements ActionListener {
 				stockView.getScrpStockTable().setVisible(false);
 				stockView.getBtnMarketPanel().setVisible(false);
 				stockView.getScrpMarketTable().setVisible(true);
+				stockView.getBtnRent().setVisible(true);
 				stockView.getLblStock().setText("MARKET");
 				try {
 					stockView.loadMarketData(dbController.selectAllFinance());

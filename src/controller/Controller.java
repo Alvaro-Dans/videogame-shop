@@ -115,17 +115,17 @@ public class Controller implements ActionListener {
 		}
 
 		if (e.getSource().equals(loginView.getBtnSignUpOk())) {
-			loginView.getLogInPanel().setVisible(true);
-			loginView.getSignUpPanel().setVisible(false);
 			try {
 				String password = Utils.convertCharArrayToString(loginView.getTextFieldSignUpPassword().getPassword());
 				dbController.insertUser(loginView.getTextFieldSignUpName().getText(),
 						Integer.parseInt(loginView.getTextFieldSignUpAge().getText()),
 						loginView.getComboBoxSignUpGender().getSelectedItem().toString(), 0L);
 				dbController.insertUserCredentials(loginView.getTextFieldSignUpName().getText(), password.toString());
-			} catch (SQLException e1) {
-				JOptionPane.showMessageDialog(loginView, "Unable to insert user", "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(loginView, "Error adding user", "Error", JOptionPane.ERROR_MESSAGE);
 			}
+			loginView.getLogInPanel().setVisible(true);
+			loginView.getSignUpPanel().setVisible(false);
 			loginView.getTextFieldSignUpAge().setText("");
 			loginView.getTextFieldSignUpName().setText("");
 			loginView.getTextFieldSignUpPassword().setText("");
@@ -266,16 +266,16 @@ public class Controller implements ActionListener {
 		}
 
 		if (e.getSource().equals(usersView.getBtnOk())) {
+			try {
+				if (usersView.getTextFieldName().getText().isEmpty() || usersView.getTextFieldAge().getText().isEmpty()
+						|| usersView.getComboBoxGender().getSelectedIndex() == -1
+						|| usersView.getTextFieldPoints().getText().isEmpty()) {
 
-			if (usersView.getTextFieldName().getText().isEmpty() || usersView.getTextFieldAge().getText().isEmpty()
-					|| usersView.getComboBoxGender().getSelectedIndex() == -1
-					|| usersView.getTextFieldPoints().getText().isEmpty()) {
+					JOptionPane.showMessageDialog(usersView, "Please fill all the fields", "Error",
+							JOptionPane.ERROR_MESSAGE);
 
-				JOptionPane.showMessageDialog(usersView, "Please fill all the fields", "Error",
-						JOptionPane.ERROR_MESSAGE);
+				} else {
 
-			} else {
-				try {
 					String name = usersView.getTextFieldName().getText();
 					int age = Integer.parseInt(usersView.getTextFieldAge().getText());
 					String gender = usersView.getComboBoxGender().getSelectedItem().toString();
@@ -291,11 +291,9 @@ public class Controller implements ActionListener {
 
 					usersView.getBtnEditar().setEnabled(true);
 					usersView.getBtnEliminar().setEnabled(true);
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(usersView, "Errors found in fields", "Error",
-							JOptionPane.ERROR_MESSAGE);
 				}
-
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(usersView, "Errors found in fields", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
 		}
@@ -337,20 +335,19 @@ public class Controller implements ActionListener {
 		}
 
 		if (e.getSource().equals(usersView.getBtnEditOk())) {
-
-			String name = usersView.getTextFieldEditName().getText();
-			int age = Integer.parseInt(usersView.getTextFieldEditAge().getText());
-			String gender = usersView.getComboBoxEditGender().getSelectedItem().toString();
-			Long points = Long.parseLong(usersView.getTextFieldEditPoints().getText());
-			int selectedRow = usersView.getUserTable().getSelectedRow();
-
 			try {
+				String name = usersView.getTextFieldEditName().getText();
+				int age = Integer.parseInt(usersView.getTextFieldEditAge().getText());
+				String gender = usersView.getComboBoxEditGender().getSelectedItem().toString();
+				Long points = Long.parseLong(usersView.getTextFieldEditPoints().getText());
+				int selectedRow = usersView.getUserTable().getSelectedRow();
+
 				dbController.updateUser(usersView.getUserTable().getValueAt(selectedRow, 0).toString(), name, age,
 						gender, points);
 				List<User> userList = dbController.selectAllUser();
 				usersView.loadUserData(userList);
 
-			} catch (SQLException e1) {
+			} catch (Exception e1) {
 
 				JOptionPane.showMessageDialog(usersView, "Unable to edit user", "Error", JOptionPane.ERROR_MESSAGE);
 			}
